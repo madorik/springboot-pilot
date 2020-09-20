@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/common :: html-head"></head>
+<body>
+    <div class="container">
+        <div th:replace="fragments/common :: header('')"></div>
+        <div align="right" style="padding: 10px;">
+            <a th:href="@{/board/save}" ><button class="btn btn-dark" type="button">글쓰기</button></a>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-horizontal table-bordered table-hover">
+                    <thead class="thead-strong thead-light" style="text-align: center;">
+                        <tr>
+                            <th>#</th>
+                            <th>제목</th>
+                            <th>작성자</th>
+                            <th>작성일</th>
+                            <th>수정일</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="board: ${boardList}">
+                        <td width="10" th:text="${board.id}">0</td>
+                        <td width="40%"><a th:text="${board.subject}" th:href="${'/board/' + board.id}">subject</a></td>
+                        <td width="10%" align="center" th:text="${board.userName}">userName</td>
+                        <td width="20%" align="center" th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm:ss')}">createdDate</td>
+                        <td width="20%" align="center" th:text="${#temporals.format(board.modifiedDate, 'yyyy-MM-dd HH:mm:ss')}">modifiedDate</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div>
+                    <nav aria-label="...">
+                        <ul class="pagination pagination justify-content-center">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Previous</a>
+                            </li>
+                            <li class="page-item" th:each="pageNum : ${pageList}">
+                                <a class="page-link" th:if="${pageNum}" th:href="@{'/board?page=' + ${pageNum}}" >[[${pageNum}]]</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <!--<span th:each="pageNum : ${pageList}" th:inline="text">
+                        <a th:href="@{'/board?page=' + ${pageNum}}">[[${pageNum}]]</a>
+                    </span>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
