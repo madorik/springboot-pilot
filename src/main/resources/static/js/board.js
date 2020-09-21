@@ -1,4 +1,4 @@
-const main = {
+const board = {
     init() {
         const self = this
         $("#btn-save").on("click", e => {
@@ -21,6 +21,7 @@ const main = {
         }
     },
     save() {
+        const token = $("input[name='_csrf']").val();
         const data = {
             subject: $("#input-subject").val(),
             userName: "밍굴이",
@@ -33,7 +34,8 @@ const main = {
             url: "/board/save",
             dataType: "json",
             contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(data)
+            data: JSON.stringify(data),
+            headers: {'X-CSRF-TOKEN': token}
         }).done(() => {
             alert("게시글이 등록되었습니다.")
             window.location.href = "/board";
@@ -42,6 +44,7 @@ const main = {
         })
     },
     update() {
+        const token = $("input[name='_csrf']").val();
         const id = $("#input-id").val()
         const data = {
             id: id,
@@ -54,7 +57,8 @@ const main = {
             url: "/board/edit/" + id,
             dataType: "json",
             contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(data)
+            data: JSON.stringify(data),
+            headers: {'X-CSRF-TOKEN': token}
         }).done(() => {
             alert("게시글이 수정되었습니다.")
             window.location.href = "/board";
@@ -63,6 +67,7 @@ const main = {
         })
     },
     delete() {
+        const token = $("input[name='_csrf']").val();
         const id = $("#input-id").val()
         if (!confirm("이 게시글을 삭제하시겠습니까?")) {
             return false
@@ -72,7 +77,8 @@ const main = {
             type: "DELETE",
             url: "/board/" + id,
             dataType: "json",
-            contentType: "application/json; charset=utf-8"
+            contentType: "application/json; charset=utf-8",
+            headers: {'X-CSRF-TOKEN': token}
         }).always(() => {
             alert("게시글이 삭제되었습니다.")
             window.location.href = "/board";
@@ -80,4 +86,4 @@ const main = {
     }
 }
 
-main.init()
+board.init()

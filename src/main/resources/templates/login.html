@@ -12,20 +12,20 @@
 </head>
 <body>
     <div class="container" style="width: 30%">
-        <h2 class="form-signin-heading">로그인이 필요한 페이지입니다.</h2>
-        <form action="/board" class="was-validated">
+        <h2 class="form-signin-heading">Login</h2>
+        <form action="/login" class="was-validated" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <div class="form-group">
-                <label for="uname">E-mail :</label>
-                <input type="text" class="form-control" id="uname" placeholder="Enter email" name="uname" required>
+                <label for="username">E-mail :</label>
+                <input type="text" class="form-control" id="username" placeholder="Enter email" name="username" required>
             </div>
             <div class="form-group">
-                <label for="pwd">Password :</label>
-                <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd" required>
+                <label for="password">Password :</label>
+                <input type="password" class="form-control" id="password" placeholder="Enter password" name="password" required>
             </div>
-            <!--<button type="submit" class="btn btn-primary">Submit</button>-->
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="/user/signup" ><button class="btn btn-dark" type="button">Sign Up</button></a>
         </form>
-        <a href="/board" ><button class="btn btn-primary" type="submit">Login</button></a>
-        <a href="/user" ><button class="btn btn-dark" type="button">Sign Up</button></a>
     </div>
 </body>
 </html>

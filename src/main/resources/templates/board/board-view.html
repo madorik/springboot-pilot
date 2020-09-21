@@ -37,8 +37,8 @@
 
             <div align="right">
                 <a href="/board" role="button" class="btn btn-secondary">목록</a>
-                <button class="btn btn-primary active" id="btn-update">수정</button>
-                <button class="btn btn-danger" id="btn-delete">삭제</button>
+                <button class="btn btn-primary active" th:if="${boardDto.userName eq '밍굴이'}" id="btn-update">수정</button>
+                <button class="btn btn-danger" th:if="${boardDto.userName eq '밍굴이'}" id="btn-delete">삭제</button>
             </div>
         </div>
         <div th:replace="fragments/common :: footer">-- thymeleaf footer will be inserted here. --</div>
