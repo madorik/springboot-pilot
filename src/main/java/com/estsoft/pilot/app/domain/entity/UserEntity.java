@@ -14,13 +14,13 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "user")
+@Table(name = "users")
 public class UserEntity extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, updatable=false)
+    @Column(unique = true, nullable = false, updatable=false)
     private String email;
 
     @Column(nullable = false)

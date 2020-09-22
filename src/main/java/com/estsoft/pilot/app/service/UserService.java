@@ -7,7 +7,6 @@ import com.estsoft.pilot.app.dto.UserDto;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,6 +26,15 @@ import java.util.Optional;
 public class UserService implements UserDetailsService {
     private UserRepository userRepository;
 
+    private UserDto convertEntityToDto(UserEntity userEntity) {
+        return UserDto.builder()
+                .id(userEntity.getId())
+                .email(userEntity.getEmail())
+                .userName(userEntity.getUserName())
+                .password(userEntity.getPassword())
+                .build();
+    }
+
     /**
      * @param email
      * @return UserDetails를 구현한 User를 반환한다.
@@ -35,12 +43,18 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<UserEntity> optUserEntity = userRepository.findByEmail(email);
+        if (!optUserEntity.isPresent()) {
+            throw new UsernameNotFoundException("User not found with this email : " + email);
+        }
+
         UserEntity userEntity = optUserEntity.get();
         List<GrantedAuthority> authorityList = new ArrayList<>();
 
         authorityList.add(new SimpleGrantedAuthority(Role.USER.getValue()));
 
-        return new User(userEntity.getEmail(), userEntity.getPassword(), authorityList);
+        UserDto userDto = convertEntityToDto(userEntity);
+        userDto.setAuthorities(authorityList);
+        return userDto;
     }
 
     /**

@@ -20,12 +20,14 @@ const board = {
             $("#div-content").html(changedContent)
         }
     },
+    token() {
+        return $("input[name='_csrf']").val();
+    },
+
     save() {
-        const token = $("input[name='_csrf']").val();
         const data = {
             subject: $("#input-subject").val(),
-            userName: "밍굴이",
-            userId: 1,
+            userName: $("#input-author").val(),
             contents: $("#txt-content").val()
         }
 
@@ -35,7 +37,7 @@ const board = {
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(data),
-            headers: {'X-CSRF-TOKEN': token}
+            headers: {'X-CSRF-TOKEN': this.token()}
         }).done(() => {
             alert("게시글이 등록되었습니다.")
             window.location.href = "/board";
@@ -44,7 +46,6 @@ const board = {
         })
     },
     update() {
-        const token = $("input[name='_csrf']").val();
         const id = $("#input-id").val()
         const data = {
             id: id,
@@ -58,7 +59,7 @@ const board = {
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(data),
-            headers: {'X-CSRF-TOKEN': token}
+            headers: {'X-CSRF-TOKEN': this.token()}
         }).done(() => {
             alert("게시글이 수정되었습니다.")
             window.location.href = "/board";
@@ -67,7 +68,6 @@ const board = {
         })
     },
     delete() {
-        const token = $("input[name='_csrf']").val();
         const id = $("#input-id").val()
         if (!confirm("이 게시글을 삭제하시겠습니까?")) {
             return false
@@ -78,7 +78,7 @@ const board = {
             url: "/board/" + id,
             dataType: "json",
             contentType: "application/json; charset=utf-8",
-            headers: {'X-CSRF-TOKEN': token}
+            headers: {'X-CSRF-TOKEN': this.token()}
         }).always(() => {
             alert("게시글이 삭제되었습니다.")
             window.location.href = "/board";
