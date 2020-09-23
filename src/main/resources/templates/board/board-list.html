@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="">
 
 <head th:replace="fragments/common :: html-head"></head>
 <body>
     <div class="container">
         <div th:replace="fragments/common :: header('')"></div>
-        <div align="right" style="padding: 10px;">
-            <a th:href="@{/board/save}" ><button class="btn btn-dark" type="button">글쓰기</button></a>
-        </div>
+            <div align="right" style="padding: 10px;">
+                <a th:href="@{/board/save}" sec:authorize="isAuthenticated()" ><button class="btn btn-dark" type="button">글쓰기</button></a>
+            </div>
         <div class="row">
             <div class="col-md-12">
                 <table class="table table-horizontal table-bordered table-hover">
@@ -45,9 +45,6 @@
                             </li>
                         </ul>
                     </nav>
-                    <!--<span th:each="pageNum : ${pageList}" th:inline="text">
-                        <a th:href="@{'/board?page=' + ${pageNum}}">[[${pageNum}]]</a>
-                    </span>-->
                 </div>
             </div>
         </div>
