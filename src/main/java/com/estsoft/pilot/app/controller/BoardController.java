@@ -2,7 +2,9 @@ package com.estsoft.pilot.app.controller;
 
 import com.estsoft.pilot.app.dto.BoardDto;
 import com.estsoft.pilot.app.service.BoardService;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +14,11 @@ import java.util.List;
 /**
  * Create by madorik on 2020-09-20
  */
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Controller
 public class BoardController {
-    private final BoardService boardService;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private BoardService boardService;
 
     @GetMapping("/board")
     public String list(Model model, @RequestParam(value = "page", defaultValue = "1") Integer pageNum) {
@@ -36,7 +39,7 @@ public class BoardController {
     @ResponseBody
     @PostMapping("/board/save")
     public Long save(@RequestBody BoardDto boardDto) {
-        return boardService.save(boardDto);
+        return boardService.saveAndUpdateBoard(boardDto);
     }
 
     @GetMapping("/board/{id}")
@@ -55,5 +58,18 @@ public class BoardController {
     @DeleteMapping("/board/{id}")
     public void delete(@PathVariable("id") Long id) {
         boardService.delete(id);
+    }
+
+    @GetMapping("/board/{id}/reply")
+    public String reply(@PathVariable("id") Long id, Model model) {
+        BoardDto boardDto = boardService.findOne(id);
+        model.addAttribute("boardDto", boardDto);
+        return "board/board-reply";
+    }
+
+    @ResponseBody
+    @PostMapping("/board/reply")
+    public Long reply(@RequestBody BoardDto boardDto) {
+        return boardService.saveBoardReply(boardDto);
     }
 }

@@ -16,14 +16,19 @@ public class BoardEntity extends BaseTimeEntity {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
+    // 원글 번호
+    @MapsId(value = "id")
     private Long pid;
 
-    @ColumnDefault("0")
+    // 원글 or 답글에 대한 순서
+    @ColumnDefault("1")
     private int orderNo;
 
-    @ColumnDefault("0")
+    // 답글 depth
+    @ColumnDefault("1")
     private int depth;
 
+    @Column(nullable = false, updatable=false)
     private String userId;
 
     @Column(length = 10, nullable = false, updatable=false)

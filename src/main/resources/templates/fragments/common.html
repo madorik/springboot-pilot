@@ -12,13 +12,13 @@
 <div th:fragment="header(currentMenu)">
     <nav class="navbar navbar-expand-sm bg-primary navbar-dark mb-4">
         <a class="navbar-brand" href="/board">Estsoft - Pilot Board</a>
-        <!--<span sec:authentication="name" style="padding-left: 500px;"></span>-->
     </nav>
     <div align="right" style="margin-top: -10px;">
         <a class="btn btn-default" sec:authorize="isAnonymous()" th:href="@{/}">로그인</a>
         <a class="btn btn-default" sec:authorize="isAnonymous()" th:href="@{/user/signup}">회원가입</a>
         <a class="btn btn-default" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
     </div>
+    <input type="hidden" id="hidden-email" th:value="${#authentication.principal.email}">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 </div>
 <div th:fragment="footer" class="mt-1">

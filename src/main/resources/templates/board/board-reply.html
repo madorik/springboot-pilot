@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/common :: html-head"></head>
+    <div class="container">
+        <div th:replace="fragments/common :: header('')"></div>
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>답글달기</h1>
+                </div>
+            </div>
+            <form>
+                <input type="text" id="hidden-pid" th:value="${boardDto.pid}">
+                <input type="text" id="hidden-orderNo" th:value="${boardDto.orderNo}">
+                <input type="text" id="hidden-depth" th:value="${boardDto.depth}">
+                <div class="form-group">
+                    <label class="col-form-label" for="input-subject">제목</label>
+                    <input type="text" class="form-control" placeholder="제목을 입력하세요." id="input-subject">
+                </div>
+
+                <div class="form-group">
+                    <label class="col-form-label" for="input-author">작성자</label>
+                    <input type="text" class="form-control" placeholder="작성자를 입력하세요." id="input-author" th:value="${#authentication.principal.username}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="txt-content">내용</label>
+                    <textarea class="form-control" id="txt-content" rows="3" placeholder="내용을 입력하세요."></textarea>
+                </div>
+            </form>
+            <div align="right">
+                <a th:href="${'/board/' + boardDto.id}" role="button" class="btn btn-secondary">원글보기</a>
+                <a th:href="${'/board'}" role="button" class="btn btn-secondary">취소</a>
+                <button type="button" class="btn btn-primary" id="btn-save">등록</button>
+            </div>
+        </div>
+        <div th:replace="fragments/common :: footer">-- thymeleaf footer will be inserted here. --</div>
+    </div>
+</body>
+</html>

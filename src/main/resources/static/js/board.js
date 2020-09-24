@@ -25,15 +25,23 @@ const board = {
     },
 
     save() {
+        let pid = $("#hidden-pid").val();
+        let orderNo = $("#hidden-orderNo").val();
+        let depth = $("#hidden-depth").val();
+
         const data = {
             subject: $("#input-subject").val(),
+            userId : $("#hidden-email").val(),
             userName: $("#input-author").val(),
-            contents: $("#txt-content").val()
+            contents: $("#txt-content").val(),
+            pid: pid ? pid : 0,
+            orderNo: orderNo ? (++orderNo) : 0,
+            depth: depth ? (++depth) : 0
         }
 
         $.ajax({
             type: "POST",
-            url: "/board/save",
+            url: "/board/" + (pid ? 'reply' : 'save'),
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(data),

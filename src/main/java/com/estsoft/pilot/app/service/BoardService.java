@@ -4,7 +4,6 @@ import com.estsoft.pilot.app.domain.entity.BoardEntity;
 import com.estsoft.pilot.app.domain.repository.BoardRepository;
 import com.estsoft.pilot.app.dto.BoardDto;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -42,8 +41,8 @@ public class BoardService {
 
     @Transactional
     public List<BoardDto> findAllByOrderByIdDesc(Integer pageNum) {
-        Page<BoardEntity> page = boardRepository.findAll(PageRequest.of(pageNum - 1, PAGE_POST_COUNT, Sort.by(Sort.Direction.ASC, "createdDate")));
-
+        Page<BoardEntity> page = boardRepository.findAll(PageRequest.of(pageNum - 1, PAGE_POST_COUNT,
+                Sort.by("pid").descending().and(Sort.by("orderNo").ascending())));
         List<BoardEntity> boardEntities = page.getContent();
         List<BoardDto> boardDtoList = new ArrayList<>();
 
@@ -99,5 +98,20 @@ public class BoardService {
     @Transactional
     public void delete(Long id) {
         boardRepository.deleteById(id);
+    }
+
+    @Transactional
+    public Long saveBoardReply(BoardDto boardDto) {
+        BoardDto originBoard = this.findOne(boardDto.getPid());
+        boardRepository.updateBoardOrderNoByPid(originBoard.getPid(), originBoard.getOrderNo());
+        return boardRepository.save(boardDto.toEntity()).getId();
+    }
+
+    @Transactional
+    public Long saveAndUpdateBoard(BoardDto boardDto) {
+        Long id = boardRepository.save(boardDto.toEntity()).getId();
+        BoardDto updateBoardDto = this.findOne(id);
+        updateBoardDto.setPid(id);
+        return boardRepository.save(updateBoardDto.toEntity()).getId();
     }
 }
