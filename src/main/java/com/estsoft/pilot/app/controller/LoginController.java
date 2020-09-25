@@ -18,9 +18,13 @@ public class LoginController {
         return "login";
     }
 
-    @RequestMapping("/error/login-error")
+    @RequestMapping("/login")
+    public String login(Model model) {
+        return "login";
+    }
+
+    @RequestMapping("/login/fail")
     public String loginError(Model model) {
-        model.addAttribute("loginError", true);
         return "login";
     }
 }

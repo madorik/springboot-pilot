@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
@@ -40,14 +41,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/user/check/**").anonymous()
                 .antMatchers("/**").permitAll()
             .and()
                 .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/board")
-                .failureUrl("/error/login-error")
+                .defaultSuccessUrl("/boards")
+                .failureUrl("/login/fail")
+                .failureHandler(loginFailureHandler())
                 .permitAll()
             .and()
                 .logout()
@@ -57,5 +58,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .exceptionHandling()
                 .accessDeniedPage("/error/denied");
+    }
+
+    @Bean
+    public AuthenticationFailureHandler loginFailureHandler() {
+        return new LoginFailureHandler();
     }
 }

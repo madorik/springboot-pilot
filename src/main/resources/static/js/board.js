@@ -35,8 +35,8 @@ const board = {
             userName: $("#input-author").val(),
             contents: $("#txt-content").val(),
             pid: pid ? pid : 0,
-            orderNo: orderNo ? (orderNo+1) : 0,
-            depth: depth ? (depth+1) : 0
+            orderNo: orderNo ? (parseInt(orderNo)+1) : 0,
+            depth: depth ? (parseInt(depth)+1) : 0
         }
 
         $.ajax({

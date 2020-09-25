@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>5xx</title>
+</head>
+<body>
+<div class="errorPage"><span class="errorHead">Error!</span><br/>
+    <p th:text="${'status: ' + status}"></p>
+    <p th:text="${'timestamp: ' + timestamp}"></p>
+    <p th:text="${'message: ' + message}"></p>
+</div>
+</body>
+</html>
