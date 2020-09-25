@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-
 <head th:replace="fragments/common :: html-head"></head>
 <body th:data-write-to="${requestFrom}">
+
     <div class="container">
         <div th:replace="fragments/common :: header(${requestFrom})">-- thymeleaf header will be inserted here. --</div>
 
@@ -16,7 +16,6 @@
                 <div class="form-group">
                     <label class="col-form-label" for="input-subject">제목</label>
                     <input type="text" class="form-control" placeholder="제목을 입력하세요." id="input-subject">
-                    <!--<input type="hidden" id="user-id" th:value="${userId}">-->
                 </div>
 
                 <div class="form-group">
@@ -30,7 +29,7 @@
                 </div>
             </form>
             <div align="right">
-                <a href="/board" role="button" class="btn btn-secondary">취소</a>
+                <a href="/boards" role="button" class="btn btn-secondary">취소</a>
                 <button type="button" class="btn btn-primary" id="btn-save">등록</button>
             </div>
         </div>

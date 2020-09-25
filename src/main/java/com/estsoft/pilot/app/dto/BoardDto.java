@@ -51,5 +51,4 @@ public class BoardDto {
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
     }
-
 }

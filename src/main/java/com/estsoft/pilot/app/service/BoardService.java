@@ -1,5 +1,6 @@
 package com.estsoft.pilot.app.service;
 
+import com.estsoft.pilot.app.controller.BoardRestController.BoardNotFoundException;
 import com.estsoft.pilot.app.domain.entity.BoardEntity;
 import com.estsoft.pilot.app.domain.repository.BoardRepository;
 import com.estsoft.pilot.app.dto.BoardDto;
@@ -19,6 +20,7 @@ import java.util.Optional;
  */
 @AllArgsConstructor
 @Service
+@Transactional
 public class BoardService {
     private BoardRepository boardRepository;
     private static final int BLOCK_PAGE_NUM_COUNT = 5;  // 블럭에 존재하는 페이지 번호 수
@@ -39,7 +41,15 @@ public class BoardService {
                 .build();
     }
 
-    @Transactional
+    public BoardDto findOne(Long id) throws BoardNotFoundException {
+        Optional<BoardEntity> boardEntityWrapper = boardRepository.findById(id);
+        if (!boardEntityWrapper.isPresent()) {
+            throw new BoardNotFoundException();
+        }
+        BoardEntity boardEntity = boardEntityWrapper.get();
+        return this.convertEntityToDto(boardEntity);
+    }
+
     public List<BoardDto> findAllByOrderByIdDesc(Integer pageNum) {
         Page<BoardEntity> page = boardRepository.findAll(PageRequest.of(pageNum - 1, PAGE_POST_COUNT,
                 Sort.by("pid").descending().and(Sort.by("orderNo").ascending())));
@@ -61,7 +71,6 @@ public class BoardService {
         // 총 게시글 기준으로 계산한 마지막 페이지 번호 계산
         Integer totalLastPageNum = (int) (Math.ceil((totalCnt / PAGE_POST_COUNT)));
 
-        // 현재 페이지를 기준으로 블럭의 마지막 페이지 번호 계산
         Integer blockLastPageNum = (totalLastPageNum > pageNum + BLOCK_PAGE_NUM_COUNT)
                 ? pageNum + BLOCK_PAGE_NUM_COUNT
                 : totalLastPageNum;
@@ -77,41 +86,53 @@ public class BoardService {
         return pageList;
     }
 
-    @Transactional
     public Long getBoardCount() {
         return boardRepository.count();
     }
 
-    @Transactional
     public Long save(BoardDto boardDto) {
         return boardRepository.save(boardDto.toEntity()).getId();
     }
 
-    @Transactional
-    public BoardDto findOne(Long id) {
-        Optional<BoardEntity> boardEntityWrapper = boardRepository.findById(id);
-        BoardEntity boardEntity = boardEntityWrapper.get();
-
-        return this.convertEntityToDto(boardEntity);
-    }
-
-    @Transactional
     public void delete(Long id) {
         boardRepository.deleteById(id);
     }
 
-    @Transactional
-    public Long saveBoardReply(BoardDto boardDto) {
+    /**
+     * 답글을 등록하면 원글에 등록되어 있는 답글의 orderNo를 +1 해준다.
+     * @param boardDto
+     * @throws BoardNotFoundException
+     */
+    public void saveBoardReply(BoardDto boardDto) throws BoardNotFoundException {
         BoardDto originBoard = this.findOne(boardDto.getPid());
         boardRepository.updateBoardOrderNoByPid(originBoard.getPid(), originBoard.getOrderNo());
-        return boardRepository.save(boardDto.toEntity()).getId();
+        boardRepository.save(boardDto.toEntity()).getId();
     }
 
-    @Transactional
-    public Long saveAndUpdateBoard(BoardDto boardDto) {
+    /**
+     * 원글의 entity id와 pid를 동일하게 맞춰준다.
+     * @param boardDto
+     * @return
+     * @throws BoardNotFoundException
+     */
+    public BoardEntity saveAndUpdateBoard(BoardDto boardDto) throws BoardNotFoundException {
         Long id = boardRepository.save(boardDto.toEntity()).getId();
         BoardDto updateBoardDto = this.findOne(id);
         updateBoardDto.setPid(id);
-        return boardRepository.save(updateBoardDto.toEntity()).getId();
+        boardRepository.save(updateBoardDto.toEntity());
+        return updateBoardDto.toEntity();
+    }
+
+    /**
+     * 제목, 내용 수정
+     * @param id
+     * @param boardDto
+     * @throws BoardNotFoundException
+     */
+    public void edit(Long id, BoardDto boardDto) throws BoardNotFoundException {
+        BoardDto copyBoardDto = this.findOne(id);
+        BoardEntity boardEntity = copyBoardDto.toEntity();
+        boardEntity.update(boardDto.getSubject(), boardDto.getContents());
+        boardRepository.save(boardEntity);
     }
 }

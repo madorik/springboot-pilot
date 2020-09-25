@@ -1,11 +1,13 @@
 package com.estsoft.pilot.app.domain.entity;
 
 import com.estsoft.pilot.app.domain.BaseTimeEntity;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -17,15 +19,15 @@ public class BoardEntity extends BaseTimeEntity {
     private Long id;
 
     // 원글 번호
-    @MapsId(value = "id")
+    @ColumnDefault("0")
     private Long pid;
 
     // 원글 or 답글에 대한 순서
-    @ColumnDefault("1")
+    @ColumnDefault("0")
     private int orderNo;
 
     // 답글 depth
-    @ColumnDefault("1")
+    @ColumnDefault("0")
     private int depth;
 
     @Column(nullable = false, updatable=false)

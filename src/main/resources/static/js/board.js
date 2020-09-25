@@ -25,9 +25,9 @@ const board = {
     },
 
     save() {
-        let pid = $("#hidden-pid").val();
-        let orderNo = $("#hidden-orderNo").val();
-        let depth = $("#hidden-depth").val();
+        const pid = $("#hidden-pid").val();
+        const orderNo = $("#hidden-orderNo").val();
+        const depth = $("#hidden-depth").val();
 
         const data = {
             subject: $("#input-subject").val(),
@@ -35,20 +35,20 @@ const board = {
             userName: $("#input-author").val(),
             contents: $("#txt-content").val(),
             pid: pid ? pid : 0,
-            orderNo: orderNo ? (++orderNo) : 0,
-            depth: depth ? (++depth) : 0
+            orderNo: orderNo ? (orderNo+1) : 0,
+            depth: depth ? (depth+1) : 0
         }
 
         $.ajax({
             type: "POST",
-            url: "/board/" + (pid ? 'reply' : 'save'),
-            dataType: "json",
+            url: "/api/v1/boards" + (pid ? '/' + orderNo +'/reply' : ''),
+            dataType: "text",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(data),
             headers: {'X-CSRF-TOKEN': this.token()}
         }).done(() => {
             alert("게시글이 등록되었습니다.")
-            window.location.href = "/board";
+            window.location.href = "/boards";
         }).fail(err => {
             alert(JSON.stringify(err))
         })
@@ -62,15 +62,15 @@ const board = {
         }
 
         $.ajax({
-            type: "PUT",
-            url: "/board/edit/" + id,
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
+            type: "PATCH",
+            url: "/api/v1/boards/" + id,
             data: JSON.stringify(data),
+            dataType: "text",
+            contentType: "application/json; charset=utf-8",
             headers: {'X-CSRF-TOKEN': this.token()}
         }).done(() => {
             alert("게시글이 수정되었습니다.")
-            window.location.href = "/board";
+            window.location.href = "/boards";
         }).fail(err => {
             alert(JSON.stringify(err))
         })
@@ -83,13 +83,15 @@ const board = {
 
         $.ajax({
             type: "DELETE",
-            url: "/board/" + id,
-            dataType: "json",
+            url: "/api/v1/boards/" + id,
+            dataType: "text",
             contentType: "application/json; charset=utf-8",
             headers: {'X-CSRF-TOKEN': this.token()}
-        }).always(() => {
+        }).done(() => {
             alert("게시글이 삭제되었습니다.")
-            window.location.href = "/board";
+            window.location.href = "/boards";
+        }).fail(err => {
+            alert(JSON.stringify(err))
         })
     }
 }

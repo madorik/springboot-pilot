@@ -10,7 +10,6 @@ import javax.transaction.Transactional;
 
 public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
 
-    @Transactional
     @Modifying
     @Query("UPDATE BoardEntity b SET b.orderNo = b.orderNo + 1 WHERE b.pid = :pid AND b.orderNo > :orderNo")
     void updateBoardOrderNoByPid(@Param("pid") Long pid, @Param("orderNo") int orderNo);

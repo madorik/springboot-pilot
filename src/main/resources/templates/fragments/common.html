@@ -11,7 +11,7 @@
 <body>
 <div th:fragment="header(currentMenu)">
     <nav class="navbar navbar-expand-sm bg-primary navbar-dark mb-4">
-        <a class="navbar-brand" href="/board">Estsoft - Pilot Board</a>
+        <a class="navbar-brand" href="/boards">Estsoft - Pilot Board</a>
     </nav>
     <div align="right" style="margin-top: -10px;">
         <a class="btn btn-default" sec:authorize="isAnonymous()" th:href="@{/}">로그인</a>

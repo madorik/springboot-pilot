@@ -11,9 +11,9 @@
                 </div>
             </div>
             <form>
-                <input type="text" id="hidden-pid" th:value="${boardDto.pid}">
-                <input type="text" id="hidden-orderNo" th:value="${boardDto.orderNo}">
-                <input type="text" id="hidden-depth" th:value="${boardDto.depth}">
+                <input type="hidden" id="hidden-pid" th:value="${boardDto.pid}">
+                <input type="hidden" id="hidden-orderNo" th:value="${boardDto.orderNo}">
+                <input type="hidden" id="hidden-depth" th:value="${boardDto.depth}">
                 <div class="form-group">
                     <label class="col-form-label" for="input-subject">제목</label>
                     <input type="text" class="form-control" placeholder="제목을 입력하세요." id="input-subject">
@@ -30,8 +30,8 @@
                 </div>
             </form>
             <div align="right">
-                <a th:href="${'/board/' + boardDto.id}" role="button" class="btn btn-secondary">원글보기</a>
-                <a th:href="${'/board'}" role="button" class="btn btn-secondary">취소</a>
+                <a th:href="${'/boards/' + boardDto.id}" role="button" class="btn btn-secondary">원글보기</a>
+                <a th:href="${'/boards'}" role="button" class="btn btn-secondary">취소</a>
                 <button type="button" class="btn btn-primary" id="btn-save">등록</button>
             </div>
         </div>
