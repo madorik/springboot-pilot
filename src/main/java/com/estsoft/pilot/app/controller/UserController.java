@@ -30,7 +30,7 @@ public class UserController {
 
     @GetMapping("/user/denied")
     public String denied() {
-        return "/error/denied";
+        return "errors/denied";
     }
 
     @ResponseBody

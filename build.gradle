@@ -27,6 +27,8 @@ dependencies {
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+    compile group: 'org.webjars', name: 'bootstrap', version: '4.5.2'
+    compile group: 'org.webjars', name: 'jquery', version: '3.5.1'
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'

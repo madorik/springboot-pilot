@@ -16,9 +16,15 @@ const user = {
             self.checkInvalidPassword();
         })
     },
+    setUser() {
+        sessionStorage.setItem("user", $("#hidden-principal").val());
+    },
+    getUser() {
+        sessionStorage.getItem("user");
+    },
     checkInvalidEmail() {
         const token = $("input[name='_csrf']").val();
-        let email = $('#sign-email').val();
+        const email = $('#sign-email').val();
         const data = {
             email: email
         };

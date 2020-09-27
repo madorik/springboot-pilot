@@ -12,13 +12,6 @@ const board = {
         $("#btn-delete").on("click", e => {
             self.delete();
         })
-
-        if ($("#div-content").length != 0) {
-            const content = $("#div-content").text()
-            const expUrl = /(((http(s)?:\/\/)\S+(\.[^(\n|\t|\s,)]+)+)|((http(s)?:\/\/)?(([a-zA-z\-_]+[0-9]*)|([0-9]*[a-zA-z\-_]+)){2,}(\.[^(\n|\t|\s,)]+)+))+/gi
-            const changedContent = content.replace(expUrl, "<a href='$&' target='_blank'>$&</a>")
-            $("#div-content").html(changedContent)
-        }
     },
     token() {
         return $("input[name='_csrf']").val();
@@ -28,12 +21,11 @@ const board = {
         const pid = $("#hidden-pid").val();
         const orderNo = $("#hidden-orderNo").val();
         const depth = $("#hidden-depth").val();
-
         const data = {
             subject: $("#input-subject").val(),
             userId : $("#hidden-email").val(),
             userName: $("#input-author").val(),
-            contents: $("#txt-content").val(),
+            contents: CKEDITOR.instances['txt-content'].getData(),
             pid: pid ? pid : 0,
             orderNo: orderNo ? (parseInt(orderNo)+1) : 0,
             depth: depth ? (parseInt(depth)+1) : 0
@@ -58,7 +50,7 @@ const board = {
         const data = {
             id: id,
             subject: $("#input-subject").val(),
-            contents: $("#txt-content").val()
+            contents: CKEDITOR.instances['txt-content'].getData(),
         }
 
         $.ajax({
