@@ -2,12 +2,8 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/common :: html-head"></head>
 <body th:data-write-to="${requestFrom}">
-    <script th:src="@{/ckeditor/ckeditor.js}"></script>
-    <link rel="stylesheet" href="/ckeditor/contents.css">
-    <script type="text/javascript" src="/ckeditor/ckeditor.js" ></script>
     <div class="container">
         <div th:replace="fragments/common :: header(${requestFrom})">-- thymeleaf header will be inserted here. --</div>
-
         <div class="col-md-12">
             <div class="row">
                 <div class="col-md-12">
@@ -38,12 +34,5 @@
 
         <div th:replace="fragments/common :: footer">-- thymeleaf footer will be inserted here. --</div>
     </div>
-    <script>
-        CKEDITOR.replace( 'txt-content', {
-            extraPlugins: 'easyimage',
-            cloudServices_tokenUrl: '/cs-token-endpoint',
-            cloudServices_uploadUrl: '/easyimage/upload/'
-        } );
-    </script>
 </body>
 </html>
