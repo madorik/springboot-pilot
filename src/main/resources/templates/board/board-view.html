@@ -27,7 +27,7 @@
 
             <div class="form-group" th:if="${boardDto.userId ne #authentication.principal.email}">
                 <label>내용</label>
-                <div id="div-content" th:text="${boardDto.contents}" class="border rounded p-2" style="overflow: auto; white-space: pre-wrap;"></div>
+                <textarea class="form-control" th:text="${boardDto.contents}" readonly></textarea>
             </div>
             <div class="form-group" th:if="${boardDto.userId eq #authentication.principal.email}">
                 <textarea class="form-control" id="txt-content" rows="3" placeholder="내용을 입력하세요." th:text="${boardDto.contents}"></textarea>

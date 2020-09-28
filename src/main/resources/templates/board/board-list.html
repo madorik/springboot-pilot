@@ -12,14 +12,15 @@
     </div>
     <div class="row">
         <div class="col-md-12">
+            <label th:text="'total count :' +  ${#numbers.formatInteger(boardList.totalElements, 3, 'COMMA')}"/>
             <table class="table table-horizontal table-bordered table-hover">
-                <thead class="thead-strong thead-light" style="text-align: center;">
+                <thead class="thead-strong thead-light">
                 <tr>
-                    <th>#</th>
-                    <th>제목</th>
-                    <th>작성자</th>
-                    <th>작성일</th>
-                    <th>수정일</th>
+                    <th style="text-align: center;">#</th>
+                    <th style="text-align: center;">제목</th>
+                    <th style="text-align: center;">작성자</th>
+                    <th style="text-align: center;">작성일</th>
+                    <th style="text-align: center;">수정일</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -44,16 +45,36 @@
             </table>
 
             <div>
-                <nav aria-label="...">
-                    <ul class="pagination pagination justify-content-center">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                <nav style="text-align: center;">
+                    <ul class="pagination"
+                        th:with="start=${T(Math).floor(boardList.number/10)*10 + 1},
+                    last=(${start + 9 < boardList.totalPages ? start + 9 : boardList.totalPages})">
+                        <li>
+                            <a th:href="@{/boards(page=1)}" aria-label="First">
+                                <span aria-hidden="true">First</span>
+                            </a>
                         </li>
-                        <li class="page-item" th:each="pageNum : ${pageList}">
-                            <a class="page-link" th:if="${pageNum}" th:href="@{'/board?page=' + ${pageNum}}">[[${pageNum}]]</a>
+
+                        <li th:class="${boardList.first} ? 'disabled'">
+                            <a th:href="${boardList.first} ? '#' :@{/boards(page=${boardList.number})}" aria-label="Previous">
+                                <span aria-hidden="true">&lt;</span>
+                            </a>
                         </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
+
+                        <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == boardList.number + 1} ? 'active'">
+                            <a th:text="${page}" th:href="@{/boards(page=${page})}"></a>
+                        </li>
+
+                        <li th:class="${boardList.last} ? 'disabled'">
+                            <a th:href="${boardList.last} ? '#' : @{/boards(page=${boardList.number + 2})}" aria-label="Next">
+                                <span aria-hidden="true">&gt;</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a th:href="@{/boards(page=${boardList.totalPages})}" aria-label="Last">
+                                <span aria-hidden="true">Last</span>
+                            </a>
                         </li>
                     </ul>
                 </nav>
