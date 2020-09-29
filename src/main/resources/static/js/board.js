@@ -25,6 +25,8 @@ const board = {
                 }
             }
         });
+
+        $('#view-content').summernote('disable');
     },
     sendFile(file, el) {
         const form_data = new FormData();

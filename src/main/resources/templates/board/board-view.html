@@ -27,12 +27,11 @@
 
             <div class="form-group" th:if="${boardDto.userId ne #authentication.principal.email}">
                 <label>내용</label>
-                <textarea class="form-control" th:text="${boardDto.contents}" readonly></textarea>
+                <textarea class="form-control" id="view-content" th:text="${boardDto.contents}"></textarea>
             </div>
             <div class="form-group" th:if="${boardDto.userId eq #authentication.principal.email}">
-                <textarea class="form-control" id="txt-content" rows="3" placeholder="내용을 입력하세요." th:text="${boardDto.contents}"></textarea>
+                <textarea class="form-control" id="txt-content" th:text="${boardDto.contents}" ></textarea>
             </div>
-
 
             <div align="right">
                 <a href="/boards" role="button" class="btn btn-secondary">목록</a>

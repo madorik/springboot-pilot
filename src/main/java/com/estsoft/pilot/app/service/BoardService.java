@@ -57,10 +57,6 @@ public class BoardService {
         return page.map(this::convertEntityToDto);
     }
 
-    public Long getBoardCount() {
-        return boardRepository.count();
-    }
-
     public Long save(BoardDto boardDto) {
         return boardRepository.save(boardDto.toEntity()).getId();
     }
