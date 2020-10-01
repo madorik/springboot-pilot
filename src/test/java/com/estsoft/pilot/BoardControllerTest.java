@@ -1,14 +1,20 @@
 package com.estsoft.pilot;
 
+import com.estsoft.pilot.app.controller.BoardRestController;
 import com.estsoft.pilot.app.domain.entity.BoardEntity;
 import com.estsoft.pilot.app.domain.repository.BoardRepository;
+import com.estsoft.pilot.app.dto.BoardDto;
+import com.estsoft.pilot.app.service.BoardService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import javax.persistence.EntityManager;
 import java.util.stream.IntStream;
 
 /**
@@ -17,16 +23,52 @@ import java.util.stream.IntStream;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class BoardControllerTest {
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    BoardService boardService;
+
     @Autowired
     BoardRepository boardRepository;
 
+    @Autowired
+    EntityManager entityManager;
+
+    @Test
+    @Description("게시글 생성")
+    public void savePost() throws BoardRestController.BoardNotFoundException {
+        BoardDto boardDto = new BoardDto();
+        boardDto.setSubject("SUBJECT");
+        boardDto.setContents("CONTENTS");
+        boardDto.setUserId("tester@gmail.com");
+        boardDto.setUserName("Tester");
+
+        boardService.saveAndUpdateBoard(boardDto);
+    }
+
+    @Test
+    @Description("게시글의 댓글 생성")
+    public void saveReply() throws BoardRestController.BoardNotFoundException {
+        BoardDto boardDto = new BoardDto();
+        boardDto.setSubject("SUBJECT");
+        boardDto.setContents("CONTENTS");
+        boardDto.setUserId("tester@gmail.com");
+        boardDto.setUserName("Tester");
+        boardDto.setThread(1000L);
+        boardDto.setDepth(1);
+
+        boardService.saveAndUpdateBoard(boardDto);
+    }
+
     @Test
     @Description("게시글 더미 데이터 생성")
-    public void save() {
+    public void loopSave() {
         IntStream.rangeClosed(1, 10000).forEach(i -> {
             BoardEntity boardEntity = boardRepository.save(BoardEntity.builder()
                     .userId("TESTER")
                     .userName("TESTER")
+                    .thread(i + 1000L)
+                    .depth(0)
                     .subject("TEST SUBJECT - " + i)
                     .contents("TEST CONTENTS - " + i)
                     .build());
@@ -35,8 +77,29 @@ public class BoardControllerTest {
     }
 
     @Test
-    @Description("게시글 조회")
-    public void get() {
+    @Description("prev thread check")
+    public void findByPrevThread() {
+        logger.info("[[[[[[[[[[ " + boardRepository.findByPrevThread(3000L)  + " ]]]]]]]]]]]]]");
+    }
 
+    @Test
+    @Description("게시판 max id")
+    public void getMaxId() {
+        Long result = boardRepository.findMaxBoardThread();
+        logger.info("[[[[[[[[[[ " + result + " ]]]]]]]]]]]]]");
+    }
+
+    private BoardDto convertEntityToDto(BoardEntity boardEntity) {
+        return BoardDto.builder()
+                .id(boardEntity.getId())
+                .thread(boardEntity.getThread())
+                .depth(boardEntity.getDepth())
+                .userId(boardEntity.getUserId())
+                .userName(boardEntity.getUserName())
+                .subject(boardEntity.getSubject())
+                .contents(boardEntity.getContents())
+                .createdDate(boardEntity.getCreatedDate())
+                .modifiedDate(boardEntity.getModifiedDate())
+                .build();
     }
 }

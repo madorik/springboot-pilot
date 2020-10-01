@@ -18,15 +18,9 @@ public class BoardEntity extends BaseTimeEntity {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    // 원글 번호
     @ColumnDefault("0")
-    private Long pid;
+    private Long thread;
 
-    // 원글 or 답글에 대한 순서
-    @ColumnDefault("0")
-    private int orderNo;
-
-    // 답글 depth
     @ColumnDefault("0")
     private int depth;
 
@@ -43,10 +37,9 @@ public class BoardEntity extends BaseTimeEntity {
     private String contents;
 
     @Builder
-    public BoardEntity(Long id, Long pid, int orderNo, int depth, String userId, String userName, String subject, String contents) {
+    public BoardEntity(Long id, Long thread, int depth, String userId, String userName, String subject, String contents) {
         this.id = id;
-        this.pid = pid;
-        this.orderNo = orderNo;
+        this.thread = thread;
         this.depth = depth;
         this.userId = userId;
         this.userName = userName;

@@ -11,8 +11,8 @@
                 </div>
             </div>
             <form>
-                <input type="hidden" id="hidden-pid" th:value="${boardDto.pid}">
-                <input type="hidden" id="hidden-orderNo" th:value="${boardDto.orderNo}">
+                <input type="hidden" id="hidden-id" th:value="${boardDto.id}">
+                <input type="hidden" id="hidden-thread" th:value="${boardDto.thread}">
                 <input type="hidden" id="hidden-depth" th:value="${boardDto.depth}">
                 <div class="form-group">
                     <label class="col-form-label" for="input-subject">제목</label>
@@ -32,7 +32,7 @@
             <div align="right">
                 <a th:href="${'/boards/' + boardDto.id}" role="button" class="btn btn-secondary">원글보기</a>
                 <a th:href="${'/boards'}" role="button" class="btn btn-secondary">취소</a>
-                <button type="button" class="btn btn-primary" id="btn-save">등록</button>
+                <button type="button" class="btn btn-primary" id="btn-reply">등록</button>
             </div>
         </div>
         <div th:replace="fragments/common :: footer">-- thymeleaf footer will be inserted here. --</div>

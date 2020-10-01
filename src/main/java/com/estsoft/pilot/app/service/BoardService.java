@@ -26,8 +26,7 @@ public class BoardService {
     private BoardDto convertEntityToDto(BoardEntity boardEntity) {
         return BoardDto.builder()
                 .id(boardEntity.getId())
-                .pid(boardEntity.getPid())
-                .orderNo(boardEntity.getOrderNo())
+                .thread(boardEntity.getThread())
                 .depth(boardEntity.getDepth())
                 .userId(boardEntity.getUserId())
                 .userName(boardEntity.getUserName())
@@ -53,7 +52,7 @@ public class BoardService {
      */
     public Page<BoardDto> findAllByOrderByIdDesc(Integer pageNum) {
         Page<BoardEntity> page = boardRepository.findAll(PageRequest.of(pageNum - 1, PAGE_POST_COUNT,
-                Sort.by("pid").descending().and(Sort.by("orderNo").ascending())));
+                Sort.by("thread").descending().and(Sort.by("depth").descending())));
         return page.map(this::convertEntityToDto);
     }
 
@@ -66,28 +65,28 @@ public class BoardService {
     }
 
     /**
-     * 답글을 등록하면 원글에 등록되어 있는 답글의 orderNo를 +1 해준다.
+     * 1. 답글을 등록하면 부모글 thread와 이전글 thread 사이의 thread를 -1씩 업데이트한다.
+     * 2. 등록되는 댓글의 thrad는 client에서 부모 threa의 -1되어 전송되었으므로 그대로 save한다.
      * @param boardDto
      * @throws BoardNotFoundException
      */
     public void saveBoardReply(BoardDto boardDto) throws BoardNotFoundException {
-        BoardDto originBoard = this.findOne(boardDto.getPid());
-        boardRepository.updateBoardOrderNoByPid(originBoard.getPid(), originBoard.getOrderNo());
+        Long thread = boardDto.getThread();
+        Long prevThread = boardRepository.findByPrevThread(thread);
+        boardRepository.updateBoardByThread(thread + 1, prevThread);
         boardRepository.save(boardDto.toEntity()).getId();
     }
 
     /**
-     * 원글의 entity id와 pid를 동일하게 맞춰준다.
+     * 1000단위의 max thread 값을 찾아 셋팅한뒤 저장
      * @param boardDto
      * @return
      * @throws BoardNotFoundException
      */
     public BoardEntity saveAndUpdateBoard(BoardDto boardDto) throws BoardNotFoundException {
-        Long id = boardRepository.save(boardDto.toEntity()).getId();
-        BoardDto updateBoardDto = this.findOne(id);
-        updateBoardDto.setPid(id);
-        boardRepository.save(updateBoardDto.toEntity());
-        return updateBoardDto.toEntity();
+        boardDto.setThread(boardRepository.findMaxBoardThread());
+        boardRepository.save(boardDto.toEntity());
+        return boardDto.toEntity();
     }
 
     /**

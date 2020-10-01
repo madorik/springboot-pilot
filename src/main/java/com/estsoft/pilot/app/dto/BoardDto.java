@@ -12,8 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class BoardDto {
     private Long id;
-    private Long pid;
-    private int orderNo;
+    private Long thread;
     private int depth;
     private String userId;
     private String userName;
@@ -25,8 +24,7 @@ public class BoardDto {
     public BoardEntity toEntity() {
         BoardEntity boardEntity = BoardEntity.builder()
                 .id(id)
-                .pid(pid)
-                .orderNo(orderNo)
+                .thread(thread)
                 .depth(depth)
                 .userId(userId)
                 .userName(userName)
@@ -38,11 +36,10 @@ public class BoardDto {
     }
 
     @Builder
-    public BoardDto(Long id, Long pid, int orderNo, int depth, String userId, String userName, String subject,
-                    String contents, Long hits, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+    public BoardDto(Long id, Long thread, int depth, String userId, String userName, String subject,
+                    String contents, LocalDateTime createdDate, LocalDateTime modifiedDate) {
         this.id = id;
-        this.pid = pid;
-        this.orderNo = orderNo;
+        this.thread = thread;
         this.depth = depth;
         this.userId = userId;
         this.userName = userName;

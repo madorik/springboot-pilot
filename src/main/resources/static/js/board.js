@@ -2,16 +2,20 @@ const board = {
     init() {
         const self = this
         $("#btn-save").on("click", e => {
-            self.save();
+            self.savePost();
+        });
+
+        $("#btn-reply").on("click", e => {
+            self.saveReply();
         })
 
         $("#btn-update").on("click", e => {
             self.update();
-        })
+        });
 
         $("#btn-delete").on("click", e => {
             self.delete();
-        })
+        });
 
         $('#txt-content').summernote({
             height: 300,
@@ -53,23 +57,17 @@ const board = {
         return $("input[name='_csrf']").val();
     },
 
-    save() {
-        const pid = $("#hidden-pid").val();
-        const orderNo = $("#hidden-orderNo").val();
-        const depth = $("#hidden-depth").val();
+    savePost() {
         const data = {
             subject: $("#input-subject").val(),
             userId: $("#hidden-email").val(),
             userName: $("#input-author").val(),
-            contents: $('#txt-content').summernote('code'),
-            pid: pid ? pid : 0,
-            orderNo: orderNo ? (parseInt(orderNo) + 1) : 0,
-            depth: depth ? (parseInt(depth) + 1) : 0
+            contents: $('#txt-content').summernote('code')
         }
 
         $.ajax({
             type: "POST",
-            url: "/api/v1/boards" + (pid ? '/' + orderNo + '/reply' : ''),
+            url: '/api/v1/boards',
             dataType: "text",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(data),
@@ -81,6 +79,35 @@ const board = {
             alert(JSON.stringify(err))
         })
     },
+
+    saveReply() {
+        const id = $("#hidden-id").val();
+        const thread = $("#hidden-thread").val();
+        const depth = $("#hidden-depth").val();
+        const data = {
+            subject: $("#input-subject").val(),
+            userId: $("#hidden-email").val(),
+            userName: $("#input-author").val(),
+            contents: $('#txt-content').summernote('code'),
+            thread: parseInt(thread) - 1,
+            depth: parseInt(depth) + 1
+        }
+
+        $.ajax({
+            type: "POST",
+            url: '/api/v1/boards/' + id + '/reply',
+            dataType: "text",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(data),
+            headers: {'X-CSRF-TOKEN': this.token()}
+        }).done(() => {
+            alert("게시글이 등록되었습니다.")
+            window.location.href = "/boards";
+        }).fail(err => {
+            alert(JSON.stringify(err))
+        })
+    },
+
     update() {
         const id = $("#input-id").val()
         const data = {
