@@ -14,4 +14,7 @@ import org.springframework.stereotype.Component;
 public class PilotProperties {
     @Value("${app.file.dir}")
     private String fileDir;
+
+    @Value("app.default.usermail")
+    private String defaultUserEmail;
 }

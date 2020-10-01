@@ -1,5 +1,6 @@
 package com.estsoft.pilot.app.service;
 
+import com.estsoft.pilot.app.config.PilotProperties;
 import com.estsoft.pilot.app.domain.entity.Role;
 import com.estsoft.pilot.app.domain.entity.UserEntity;
 import com.estsoft.pilot.app.domain.repository.UserRepository;
@@ -25,6 +26,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserService implements UserDetailsService {
     private UserRepository userRepository;
+    private PilotProperties pilotProperties;
 
     private UserDto convertEntityToDto(UserEntity userEntity) {
         return UserDto.builder()
@@ -50,7 +52,11 @@ public class UserService implements UserDetailsService {
         UserEntity userEntity = optUserEntity.get();
         List<GrantedAuthority> authorityList = new ArrayList<>();
 
-        authorityList.add(new SimpleGrantedAuthority(Role.USER.getValue()));
+        if (pilotProperties.getDefaultUserEmail().equals(email)) {
+            authorityList.add(new SimpleGrantedAuthority(Role.ADMIN.getValue()));
+        } else {
+            authorityList.add(new SimpleGrantedAuthority(Role.USER.getValue()));
+        }
 
         UserDto userDto = convertEntityToDto(userEntity);
         userDto.setAuthorities(authorityList);
