@@ -66,11 +66,11 @@ public class BoardService {
 
     /**
      * 1. 답글을 등록하면 부모글 thread와 이전글 thread 사이의 thread를 -1씩 업데이트한다.
-     * 2. 등록되는 댓글의 thrad는 client에서 부모 threa의 -1되어 전송되었으므로 그대로 save한다.
+     * 2. 등록되는 댓글의 thread는 client에서 부모 thread의 -1되어 전송되었으므로 그대로 save한다.
      * @param boardDto
      * @throws BoardNotFoundException
      */
-    public void saveBoardReply(BoardDto boardDto) throws BoardNotFoundException {
+    public void saveBoardReply(BoardDto boardDto) {
         Long thread = boardDto.getThread();
         Long prevThread = boardRepository.findByPrevThread(thread);
         boardRepository.updateBoardByThread(thread + 1, prevThread);
@@ -83,7 +83,7 @@ public class BoardService {
      * @return
      * @throws BoardNotFoundException
      */
-    public BoardEntity saveAndUpdateBoard(BoardDto boardDto) throws BoardNotFoundException {
+    public BoardEntity saveAndUpdateBoard(BoardDto boardDto) {
         boardDto.setThread(boardRepository.findMaxBoardThread());
         boardRepository.save(boardDto.toEntity());
         return boardDto.toEntity();

@@ -1,13 +1,11 @@
 package com.estsoft.pilot.app.controller;
 
 import com.estsoft.pilot.app.dto.BoardDto;
-import com.estsoft.pilot.app.controller.BoardRestController.BoardNotFoundException;
 import com.estsoft.pilot.app.service.BoardService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

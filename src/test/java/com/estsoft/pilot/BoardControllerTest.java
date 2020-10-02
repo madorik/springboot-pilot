@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Description;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.persistence.EntityManager;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 /**
@@ -34,9 +35,17 @@ public class BoardControllerTest {
     @Autowired
     EntityManager entityManager;
 
+
+    @Test
+    @Description("게시글 단일 조회")
+    public void findBoard() {
+        Optional<BoardEntity> boardEntity = boardRepository.findById(1L);
+        logger.info(boardEntity.get().toString());
+    }
+
     @Test
     @Description("게시글 생성")
-    public void savePost() throws BoardRestController.BoardNotFoundException {
+    public void savePost() {
         BoardDto boardDto = new BoardDto();
         boardDto.setSubject("SUBJECT");
         boardDto.setContents("CONTENTS");
@@ -48,7 +57,7 @@ public class BoardControllerTest {
 
     @Test
     @Description("게시글의 댓글 생성")
-    public void saveReply() throws BoardRestController.BoardNotFoundException {
+    public void saveReply() {
         BoardDto boardDto = new BoardDto();
         boardDto.setSubject("SUBJECT");
         boardDto.setContents("CONTENTS");
@@ -79,7 +88,7 @@ public class BoardControllerTest {
     @Test
     @Description("prev thread check")
     public void findByPrevThread() {
-        logger.info("[[[[[[[[[[ " + boardRepository.findByPrevThread(3000L)  + " ]]]]]]]]]]]]]");
+        logger.info("[[[[[[[[[[ " + boardRepository.findByPrevThread(3000L) + " ]]]]]]]]]]]]]");
     }
 
     @Test

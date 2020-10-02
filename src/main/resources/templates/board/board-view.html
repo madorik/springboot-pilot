@@ -40,6 +40,14 @@
                 <button class="btn btn-danger" id="btn-delete" th:if="${boardDto.userId eq #authentication.principal.email}">삭제</button>
             </div>
         </div>
+        <div class="col-md-12" style="padding-top: 60px;">
+            <div class="form-group">
+                <textarea class="form-control" id="txt-comment"></textarea>
+            </div>
+        </div>
+        <div class="col-md-12" id="commentList"  style="padding-top: 60px;">
+
+        </div>
         <div th:replace="fragments/common :: footer">-- thymeleaf footer will be inserted here. --</div>
     </div>
 </body>

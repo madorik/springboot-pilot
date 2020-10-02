@@ -24,7 +24,7 @@ const board = {
             callbacks: {
                 onImageUpload: function (files) {
                     for (let file of files) {
-                        board.sendFile(file, this);
+                        board.sendFile(file, this, 50);
                     }
                 }
             }
@@ -32,7 +32,7 @@ const board = {
 
         $('#view-content').summernote('disable');
     },
-    sendFile(file, el) {
+    sendFile(file, el, size) {
         const form_data = new FormData();
         form_data.append('file', file);
         $.ajax({
@@ -46,7 +46,7 @@ const board = {
             headers: {'X-CSRF-TOKEN': this.token()}
         }).done((url) => {
             $(el).summernote('insertImage', url, function ($image) {
-                $image.css('width', "50%");
+                $image.css('width', size+"%");
             });
         }).fail(err => {
             console.log(err);

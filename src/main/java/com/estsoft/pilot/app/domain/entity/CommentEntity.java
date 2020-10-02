@@ -9,17 +9,26 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@Table(name = "board")
-public class BoardEntity extends BaseTimeEntity {
+@Table(name = "comment")
+public class CommentEntity extends BaseTimeEntity {
     @Id
-    @Column(name = "board_id")
+    @Column(name = "comment_id")
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "boardId")
+    private BoardEntity boardEntity;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    private UserEntity userEntity;
 
     @ColumnDefault("0")
     private Long thread;
@@ -27,37 +36,33 @@ public class BoardEntity extends BaseTimeEntity {
     @ColumnDefault("0")
     private int depth;
 
-    @Column(nullable = false, updatable=false)
-    private String userId;
-
     @Column(length = 10, nullable = false, updatable=false)
     private String userName;
 
-    @Column(length = 100, nullable = false)
-    private String subject;
-
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(length = 200, nullable = false)
     private String contents;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "boardEntity", fetch = FetchType.LAZY)
-    private List<CommentEntity> commentEntities;
+    private String deleteYn;
 
     @Builder
-    public BoardEntity(Long id, Long thread, int depth, String userId, String userName, String subject,
-                       String contents, List<CommentEntity> commentEntities) {
+    public CommentEntity(Long id, BoardEntity boardEntity, Long thread, int depth, UserEntity userEntity,
+                         String userName, String contents, String deleteYn) {
         this.id = id;
+        this.boardEntity = boardEntity;
         this.thread = thread;
+        this.userEntity = userEntity;
         this.depth = depth;
-        this.userId = userId;
         this.userName = userName;
-        this.subject = subject;
         this.contents = contents;
-        this.commentEntities = commentEntities;
+        this.deleteYn = deleteYn;
     }
 
-    public void update(String subject, String contents) {
-        this.subject = subject;
+    public void update(String contents, String deleteYn ) {
         this.contents = contents;
+        this.deleteYn = deleteYn;
+    }
+
+    public void delete(String deleteYn ) {
+        this.deleteYn = deleteYn;
     }
 }

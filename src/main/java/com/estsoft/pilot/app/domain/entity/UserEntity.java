@@ -14,11 +14,11 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "users")
+@Table(name = "user")
 public class UserEntity extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long id;
+    private Long userId;
 
     @Column(unique = true, nullable = false, updatable=false)
     private String email;
@@ -31,7 +31,7 @@ public class UserEntity extends BaseTimeEntity {
 
     @Builder
     public UserEntity(Long id, String email, String userName, String password) {
-        this.id = id;
+        this.userId = userId;
         this.email = email;
         this.userName = userName;
         this.password = password;

@@ -2,53 +2,58 @@ package com.estsoft.pilot.app.dto;
 
 import com.estsoft.pilot.app.domain.entity.BoardEntity;
 import com.estsoft.pilot.app.domain.entity.CommentEntity;
+import com.estsoft.pilot.app.domain.entity.UserEntity;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
+
+/**
+ * Create by madorik on 2020-10-01
+ */
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public class BoardDto {
+public class CommentDto {
     private Long id;
+    private BoardEntity boardEntity;
     private Long thread;
     private int depth;
-    private String userId;
+    private UserEntity userEntity;
     private String userName;
     private String subject;
     private String contents;
-    private List<CommentEntity> commentEntities;
+    private String deleteYn;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
-    public BoardEntity toEntity() {
-        BoardEntity boardEntity = BoardEntity.builder()
+    public CommentEntity toEntity() {
+        CommentEntity commentEntity = CommentEntity.builder()
                 .id(id)
+                .boardEntity(boardEntity)
                 .thread(thread)
                 .depth(depth)
-                .userId(userId)
+                .userEntity(userEntity)
                 .userName(userName)
-                .subject(subject)
                 .contents(contents)
-                .commentEntities(commentEntities)
+                .deleteYn(deleteYn)
                 .build();
 
-        return boardEntity;
+        return commentEntity;
     }
 
     @Builder
-    public BoardDto(Long id, Long thread, int depth, String userId, String userName, String subject,
-                    String contents, List<CommentEntity> commentEntities, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+    public CommentDto(Long id, BoardEntity boardEntity, Long thread, int depth, UserEntity userEntity, String userName,
+                    String contents, String deleteYn, LocalDateTime createdDate, LocalDateTime modifiedDate) {
         this.id = id;
+        this.boardEntity = boardEntity;
         this.thread = thread;
         this.depth = depth;
-        this.userId = userId;
+        this.userEntity = userEntity;
         this.userName = userName;
-        this.subject = subject;
         this.contents = contents;
-        this.commentEntities = commentEntities;
+        this.deleteYn = deleteYn;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
     }
