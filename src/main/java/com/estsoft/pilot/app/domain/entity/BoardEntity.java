@@ -2,10 +2,7 @@ package com.estsoft.pilot.app.domain.entity;
 
 import com.estsoft.pilot.app.domain.BaseTimeEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -40,7 +37,7 @@ public class BoardEntity extends BaseTimeEntity {
     private String contents;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "boardEntity", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "boardEntity", fetch = FetchType.EAGER)
     private List<CommentEntity> commentEntities;
 
     @Builder

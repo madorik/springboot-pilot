@@ -21,7 +21,7 @@ public class CommentEntity extends BaseTimeEntity {
     private Long id;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "boardId")
     private BoardEntity boardEntity;
 

@@ -32,6 +32,7 @@ public class BoardService {
                 .userName(boardEntity.getUserName())
                 .subject(boardEntity.getSubject())
                 .contents(boardEntity.getContents())
+                .commentEntities(boardEntity.getCommentEntities())
                 .createdDate(boardEntity.getCreatedDate())
                 .modifiedDate(boardEntity.getModifiedDate())
                 .build();

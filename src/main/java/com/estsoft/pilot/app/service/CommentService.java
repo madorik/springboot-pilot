@@ -1,5 +1,7 @@
 package com.estsoft.pilot.app.service;
 
+import com.estsoft.pilot.app.controller.BoardRestController;
+import com.estsoft.pilot.app.controller.BoardRestController.BoardNotFoundException;
 import com.estsoft.pilot.app.domain.entity.BoardEntity;
 import com.estsoft.pilot.app.domain.entity.CommentEntity;
 import com.estsoft.pilot.app.domain.repository.CommentRepository;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Create by madorik on 2020-10-01
@@ -34,9 +37,17 @@ public class CommentService {
                 .contents(commentEntity.getContents())
                 .deleteYn(commentEntity.getDeleteYn())
                 .createdDate(commentEntity.getCreatedDate())
-                //.boardEntity(commentEntity.getBoardEntity())
+                .boardEntity(commentEntity.getBoardEntity())
                 .modifiedDate(commentEntity.getModifiedDate())
                 .build();
+    }
+
+    public CommentDto findOne(Long id) throws BoardNotFoundException {
+        Optional<CommentEntity> commentEntityWrapper = commentRepository.findById(id);
+        if (!commentEntityWrapper.isPresent()) {
+            throw new BoardRestController.BoardNotFoundException();
+        }
+        return this.convertEntityToDto(commentEntityWrapper.get());
     }
 
     public List<CommentDto> findByBoard(BoardEntity boardEntity) {
@@ -63,14 +74,26 @@ public class CommentService {
 
     /**
      * 상세 게시글 코멘트에 댓글을 추가한다. (대댓글)
-     * @param boardId
+     * @param id : board_id
      * @param commentDto
      */
-    public void saveReplyByComment(Long boardId, CommentDto commentDto) {
+    public void saveReplyByComment(Long id, CommentDto commentDto) {
         Long thread = commentDto.getThread();
-        Long prevThread = commentRepository.findByPrevCommentThread(thread, boardId);
-        commentDto.setBoardEntity(new BoardDto(boardId).toEntity());
+        Long prevThread = commentRepository.findByPrevCommentThread(thread, id);
+        commentDto.setBoardEntity(new BoardDto(id).toEntity());
         commentRepository.updateCommentByThread(thread + 1, prevThread, commentDto.getBoardEntity());
         commentRepository.save(commentDto.toEntity()).getId();
+    }
+
+    /**
+     * 코멘트 삭제여부 업데이트
+     * @param id
+     * @throws BoardNotFoundException
+     */
+    public void deleteById(Long id) throws BoardNotFoundException {
+        CommentDto commentDto = this.findOne(id);
+        commentDto.setDeleteYn("Y");
+
+        commentRepository.save(commentDto.toEntity());
     }
 }

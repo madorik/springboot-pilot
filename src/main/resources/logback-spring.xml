@@ -22,10 +22,9 @@
         </rollingPolicy>
     </appender>
 
-    <root level="INFO">
+<!--    <root level="INFO">
         <appender-ref ref="STDOUT"/>
-    </root>
-
+    </root>-->
     <logger name="com.estsoft.pilot"  level="DEBUG" additivity="false">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE" />

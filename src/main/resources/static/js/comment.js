@@ -86,17 +86,16 @@ const comment = {
     },
 
     hiveCommentDiv() {
-        var div = document.getElementById(id);
+        const div = document.getElementById(id);
         div.style.display = "none";
         document.body.appendChild(div);
-
     },
 
     getCommentAll() {
-        const id = $("#hidden-id").val();
-        if (!id) return;
+        const boardId = $("#hidden-id").val();
+        if (!boardId) return;
         $.ajax({
-            url: '/api/v1/comments/' + id,
+            url: '/api/v1/boards/' + boardId + '/comments',
             type: "GET",
             dataType: "text",
             contentType: "application/json; charset=utf-8",
@@ -108,13 +107,21 @@ const comment = {
                 if (value.depth > 0) {
                     htmlStr += '<img src="/img/arrow2.png" width="15"/>';
                 }
-                htmlStr += '<b>' + value.userName + '</b> ' + value.createdDate;
+                htmlStr += '<b> ' + value.userName + '</b> ' + value.createdDate;
                 htmlStr += '<div style="float: right;">';
-                htmlStr += '<i class="far fa-comment-dots" style="padding-right: 10px" onclick="comment.showCommentDiv(' + value.id + ',' + value.thread + ',' + value.depth + ')"></i>';
-                htmlStr += '<i class="far fa-edit" style="padding-right: 10px"></i>';
-                htmlStr += '<i class="far fa-trash-alt" style="padding-right: 10px"></i>';
+                if (value.deleteYn !== 'Y') {
+                    htmlStr += '<i class="far fa-comment-dots" style="padding-right: 10px" onclick="comment.showCommentDiv(' + value.id + ',' + value.thread + ',' + value.depth + ')"></i>';
+                    htmlStr += '<i class="far fa-edit" style="padding-right: 10px"></i>';
+                    htmlStr += '<i class="far fa-trash-alt" style="padding-right: 10px" onclick="comment.deleteComment(' + boardId + ',' + value.id + ')"></i>';
+                }
                 htmlStr += '</div></p>';
-                htmlStr += '<p style="padding-left: ' + (value.depth * 15) + 'px;">' + value.contents + '</p>';
+                htmlStr += '<p style="padding-left: ' + (value.depth * 15) + 'px;">';
+                if (value.deleteYn === 'Y') {
+                    htmlStr += '삭제된 댓글입니다.';
+                } else {
+                    htmlStr += value.contents;
+                }
+                htmlStr += '</p>';
                 htmlStr += '</div>';
             });
             $("#commentList").html(htmlStr);
@@ -134,7 +141,7 @@ const comment = {
 
         $.ajax({
             type: "POST",
-            url: '/api/v1/comments/' + id,
+            url: '/api/v1/boards/' + id + '/comments',
             dataType: "text",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(data),
@@ -142,7 +149,9 @@ const comment = {
         }).done(() => {
             alert("댓글이 등록되었습니다.");
             $('#txt-comment').summernote('reset');
-            comment.getCommentAll();
+            setTimeout(function () {
+                comment.getCommentAll();
+            }, 1)
         }).fail(err => {
             alert(JSON.stringify(err))
         })
@@ -162,7 +171,7 @@ const comment = {
 
         $.ajax({
             type: "POST",
-            url: '/api/v1/comments/' + id + '/reply',
+            url: '/api/v1/boards/' + id + '/comments/reply',
             dataType: "text",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(data),
@@ -170,6 +179,25 @@ const comment = {
         }).done(() => {
             alert("게시글이 등록되었습니다.")
             $('#txt-reComment').summernote('reset');
+            comment.getCommentAll();
+        }).fail(err => {
+            alert(JSON.stringify(err))
+        })
+    },
+
+    deleteComment(boardId, commentId) {
+        if (!confirm("이 게시글을 삭제하시겠습니까?")) {
+            return false
+        }
+
+        $.ajax({
+            type: 'PUT',
+            url: '/api/v1/boards/' + boardId + '/comments/' + commentId,
+            dataType: "text",
+            contentType: "application/json; charset=utf-8",
+            headers: {'X-CSRF-TOKEN': board.token()}
+        }).done(() => {
+            alert("게시글이 삭제되었습니다.");
             comment.getCommentAll();
         }).fail(err => {
             alert(JSON.stringify(err))

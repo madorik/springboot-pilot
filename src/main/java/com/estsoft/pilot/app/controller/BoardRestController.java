@@ -76,7 +76,7 @@ public class BoardRestController {
      * @throws BoardNotFoundException
      */
     @PostMapping("/{id}/reply")
-    public ResponseEntity<?> reply(@PathVariable("id") Long id, @RequestBody BoardDto boardDto) throws BoardNotFoundException {
+    public ResponseEntity<?> reply(@PathVariable("id") Long id, @RequestBody BoardDto boardDto) {
         boardService.saveBoardReply(boardDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
