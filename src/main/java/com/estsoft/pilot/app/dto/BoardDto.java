@@ -23,6 +23,10 @@ public class BoardDto {
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
+    public BoardDto(Long id) {
+        this.id = id;
+    }
+
     public BoardEntity toEntity() {
         BoardEntity boardEntity = BoardEntity.builder()
                 .id(id)

@@ -42,19 +42,21 @@ public class CommentRestController {
      */
     @PostMapping("/{boardId}")
     public ResponseEntity<?> save(@PathVariable("boardId") Long boardId, @RequestBody CommentDto commentDto) {
-        BoardDto boardDto = new BoardDto();
-        boardDto.setId(boardId);
-        commentDto.setBoardEntity(boardDto.toEntity());
         commentService.saveAndUpdateComment(commentDto, boardId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-
-/*
-    @PostMapping("/{boardId}")
+    /**
+     * 상세 게시글에 달린 comment에 댓글을 추가한다.
+     * @param boardId
+     * @param commentDto
+     * @return
+     * @throws BoardRestController.BoardNotFoundException
+     */
+    @PostMapping("/{boardId}/reply")
     public ResponseEntity<?> reply(@PathVariable("boardId") Long boardId, @RequestBody CommentDto commentDto) throws BoardRestController.BoardNotFoundException {
-        commentService.saveBoardComment(boardId, commentDto);
+        commentService.saveReplyByComment(boardId, commentDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
-    }*/
+    }
 
 }

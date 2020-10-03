@@ -3,6 +3,7 @@
 
 <head th:replace="fragments/common :: html-head"></head>
 <body th:data-write-to="boardDto">
+    <script type="text/javascript" src="/js/comment.js"></script>
     <div class="container">
         <div th:replace="fragments/common :: header('')">-- thymeleaf header will be inserted here. --</div>
         <div class="col-md-12">
@@ -45,8 +46,12 @@
                 <textarea class="form-control" id="txt-comment"></textarea>
             </div>
         </div>
-        <div class="col-md-12" id="commentList"  style="padding-top: 60px;">
-
+        <div class="col-md-12" id="commentList" style="padding-top: 60px;"></div>
+        <div id="replyDialog" style="width: 99%; display:none">
+            <input type="hidden" id="hidden-id" th:value="${boardDto.id}">
+            <input type="hidden" id="hidden-thread" name="thread">
+            <input type="hidden" id="hidden-depth" name="depth">
+            <textarea class="form-control" id="txt-reComment" th:text="${boardDto.contents}" ></textarea>
         </div>
         <div th:replace="fragments/common :: footer">-- thymeleaf footer will be inserted here. --</div>
     </div>
