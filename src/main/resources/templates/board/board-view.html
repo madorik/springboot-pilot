@@ -8,10 +8,10 @@
         <div th:replace="fragments/common :: header('')">-- thymeleaf header will be inserted here. --</div>
         <div class="col-md-12">
             <div class="row">
-                <div class="col-md-12" th:if="${boardDto.userId ne #authentication.principal.email}">
+                <div class="col-md-12" th:if="${boardDto.userEntity.email ne #authentication.principal.email}">
                     <h1 th:text="${boardDto.subject}">게시글 조회</h1>
                 </div>
-                <div class="col-md-12" th:if="${boardDto.userId eq #authentication.principal.email}">
+                <div class="col-md-12" th:if="${boardDto.userEntity.email eq #authentication.principal.email}">
                     <input type="text" class="form-control" placeholder="제목을 입력하세요." id="input-subject" th:value="${boardDto.subject}">
                 </div>
             </div>
@@ -23,22 +23,22 @@
 
             <div class="form-group">
                 <label class="col-form-label" for="input-author">작성자</label>
-                <input type="text" class="form-control" id="input-author" th:value="${boardDto.userName}" readonly>
+                <input type="text" class="form-control" id="input-author" th:value="${boardDto.userEntity.userName}" readonly>
             </div>
 
-            <div class="form-group" th:if="${boardDto.userId ne #authentication.principal.email}">
+            <div class="form-group" th:if="${boardDto.userEntity.email ne #authentication.principal.email}">
                 <label>내용</label>
                 <textarea class="form-control" id="view-content" th:text="${boardDto.contents}"></textarea>
             </div>
-            <div class="form-group" th:if="${boardDto.userId eq #authentication.principal.email}">
+            <div class="form-group" th:if="${boardDto.userEntity.email eq #authentication.principal.email}">
                 <textarea class="form-control" id="txt-content" th:text="${boardDto.contents}" ></textarea>
             </div>
 
             <div align="right">
                 <a href="/boards" role="button" class="btn btn-secondary">목록</a>
                 <a th:href="${'/boards/' + boardDto.id + '/reply'}" sec:authorize="isAuthenticated()" class="btn btn-secondary">답글달기</a>
-                <button class="btn btn-primary active" id="btn-update" th:if="${boardDto.userId eq #authentication.principal.email}">수정</button>
-                <button class="btn btn-danger" id="btn-delete" th:if="${boardDto.userId eq #authentication.principal.email}">삭제</button>
+                <button class="btn btn-primary active" id="btn-update" th:if="${boardDto.userEntity.email eq #authentication.principal.email}">수정</button>
+                <button class="btn btn-danger" id="btn-delete" th:if="${boardDto.userEntity.email eq #authentication.principal.email}">삭제</button>
             </div>
         </div>
         <div class="col-md-12" style="padding-top: 60px;">

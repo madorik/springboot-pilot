@@ -4,6 +4,8 @@ import com.estsoft.pilot.app.domain.BaseTimeEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.List;
@@ -24,11 +26,10 @@ public class BoardEntity extends BaseTimeEntity {
     @ColumnDefault("0")
     private int depth;
 
-    @Column(nullable = false, updatable=false)
-    private String userId;
-
-    @Column(length = 10, nullable = false, updatable=false)
-    private String userName;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private UserEntity userEntity;
 
     @Column(length = 100, nullable = false)
     private String subject;
@@ -41,13 +42,12 @@ public class BoardEntity extends BaseTimeEntity {
     private List<CommentEntity> commentEntities;
 
     @Builder
-    public BoardEntity(Long id, Long thread, int depth, String userId, String userName, String subject,
+    public BoardEntity(Long id, Long thread, int depth, UserEntity userEntity, String subject,
                        String contents, List<CommentEntity> commentEntities) {
         this.id = id;
         this.thread = thread;
         this.depth = depth;
-        this.userId = userId;
-        this.userName = userName;
+        this.userEntity = userEntity;
         this.subject = subject;
         this.contents = contents;
         this.commentEntities = commentEntities;

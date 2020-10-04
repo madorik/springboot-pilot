@@ -30,7 +30,7 @@ public class UserService implements UserDetailsService {
 
     private UserDto convertEntityToDto(UserEntity userEntity) {
         return UserDto.builder()
-                .id(userEntity.getUserId())
+                .id(userEntity.getId())
                 .email(userEntity.getEmail())
                 .userName(userEntity.getUserName())
                 .password(userEntity.getPassword())
@@ -73,7 +73,7 @@ public class UserService implements UserDetailsService {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         userDto.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
 
-        return userRepository.save(userDto.toEntity()).getUserId();
+        return userRepository.save(userDto.toEntity()).getId();
     }
 
     /**
@@ -85,4 +85,5 @@ public class UserService implements UserDetailsService {
     public int checkInvalidEmail(String email) {
         return userRepository.countByEmail(email);
     }
+
 }

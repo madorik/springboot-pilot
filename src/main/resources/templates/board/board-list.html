@@ -33,7 +33,7 @@
                         </c:if>
                         <a th:text="${board.subject}" th:href="${'/boards/' + board.id}">subject</a>
                     </td>
-                    <td width="10%" align="center" th:text="${board.userName}">userName</td>
+                    <td width="10%" align="center" th:text="${board.userEntity.userName}">userName</td>
                     <td width="20%" align="center"
                         th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm:ss')}">createdDate
                     </td>

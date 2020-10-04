@@ -14,8 +14,8 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
     @Query("SELECT c FROM CommentEntity c WHERE c.boardEntity = ?1 ORDER BY c.thread DESC")
     List<CommentEntity> findByBoard(BoardEntity boardEntity);
 
-    @Query(nativeQuery = true, value = "SELECT COALESCE(b.thread, 0) FROM comment b WHERE b.depth = 0 AND b.thread < ?1 AND b.board_id = ?2 LIMIT 1")
-    Long findByPrevCommentThread(Long thread, Long boardId);
+    @Query(nativeQuery = true, value = "SELECT COALESCE(MAX(c.thread), 0) FROM comment c WHERE c.depth = 0 AND c.thread < ?1 AND c.board_id = ?2 ORDER BY c.thread DESC LIMIT 1")
+    Long findByPrevCommentThread(@Param("thread") Long thread, @Param("boardId") Long boardId);
 
     @Modifying
     @Query("UPDATE CommentEntity c SET c.thread = c.thread - 1 WHERE c.thread < :thread  AND c.thread > :prevThread AND c.boardEntity = :boardEntity")

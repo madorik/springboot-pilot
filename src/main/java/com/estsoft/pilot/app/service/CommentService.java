@@ -33,11 +33,11 @@ public class CommentService {
                 .id(commentEntity.getId())
                 .thread(commentEntity.getThread())
                 .depth(commentEntity.getDepth())
-                .userName(commentEntity.getUserName())
                 .contents(commentEntity.getContents())
                 .deleteYn(commentEntity.getDeleteYn())
                 .createdDate(commentEntity.getCreatedDate())
                 .boardEntity(commentEntity.getBoardEntity())
+                .userEntity(commentEntity.getUserEntity())
                 .modifiedDate(commentEntity.getModifiedDate())
                 .build();
     }
@@ -80,6 +80,7 @@ public class CommentService {
     public void saveReplyByComment(Long id, CommentDto commentDto) {
         Long thread = commentDto.getThread();
         Long prevThread = commentRepository.findByPrevCommentThread(thread, id);
+
         commentDto.setBoardEntity(new BoardDto(id).toEntity());
         commentRepository.updateCommentByThread(thread + 1, prevThread, commentDto.getBoardEntity());
         commentRepository.save(commentDto.toEntity()).getId();

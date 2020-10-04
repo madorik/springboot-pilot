@@ -11,7 +11,7 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     @Query("SELECT COALESCE(MAX(b.thread), 0) + 1000 FROM BoardEntity b")
     Long findMaxBoardThread();
 
-    @Query(nativeQuery = true, value = "SELECT COALESCE(b.thread, 0) FROM board b WHERE b.depth = 0 AND b.thread < ? LIMIT 1")
+    @Query(nativeQuery = true, value = "SELECT COALESCE(b.thread, 0) FROM board b WHERE b.depth = 0 AND b.thread < ? ORDER BY b.thread DESC LIMIT 1")
     Long findByPrevThread(@Param("thread") Long thread);
 
     @Modifying

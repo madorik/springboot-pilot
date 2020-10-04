@@ -2,21 +2,21 @@ package com.estsoft.pilot.app.dto;
 
 import com.estsoft.pilot.app.domain.entity.BoardEntity;
 import com.estsoft.pilot.app.domain.entity.CommentEntity;
+import com.estsoft.pilot.app.domain.entity.UserEntity;
 import lombok.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 public class BoardDto {
     private Long id;
     private Long thread;
     private int depth;
-    private String userId;
-    private String userName;
+    private UserEntity userEntity;
     private String subject;
     private String contents;
     private List<CommentEntity> commentEntities;
@@ -28,12 +28,12 @@ public class BoardDto {
     }
 
     public BoardEntity toEntity() {
+        UserDto userDto = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         BoardEntity boardEntity = BoardEntity.builder()
                 .id(id)
                 .thread(thread)
                 .depth(depth)
-                .userId(userId)
-                .userName(userName)
+                .userEntity(userDto.toEntity())
                 .subject(subject)
                 .contents(contents)
                 .commentEntities(commentEntities)
@@ -43,13 +43,12 @@ public class BoardDto {
     }
 
     @Builder
-    public BoardDto(Long id, Long thread, int depth, String userId, String userName, String subject,
+    public BoardDto(Long id, Long thread, int depth, UserEntity userEntity, String userName, String subject,
                     String contents, List<CommentEntity> commentEntities, LocalDateTime createdDate, LocalDateTime modifiedDate) {
         this.id = id;
         this.thread = thread;
         this.depth = depth;
-        this.userId = userId;
-        this.userName = userName;
+        this.userEntity = userEntity;
         this.subject = subject;
         this.contents = contents;
         this.commentEntities = commentEntities;

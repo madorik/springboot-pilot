@@ -85,14 +85,16 @@ const comment = {
     },
 
     hiveCommentDiv() {
-        const div = document.getElementById(id);
-        div.style.display = "none";
+        const div = document.getElementById('replyDialog');
+        div.style.display = 'none';
         document.body.appendChild(div);
     },
 
     getCommentAll(boardId) {
         boardId = boardId ? boardId : $("#hidden-id").val();
         if (!boardId) return;
+        const userEmail = $('#hidden-email').val();
+
         $.ajax({
             url: '/api/v1/boards/' + boardId + '/comments',
             type: "GET",
@@ -106,12 +108,14 @@ const comment = {
                 if (value.depth > 0) {
                     htmlStr += '<img src="/img/arrow2.png" width="15"/>';
                 }
-                htmlStr += '<b> ' + value.userName + '</b> ' + value.createdDate;
+                htmlStr += '<b> ' + value.userEntity.userName + '</b> ' + value.createdDate;
                 htmlStr += '<div style="float: right;">';
                 if (value.deleteYn !== 'Y') {
                     htmlStr += '<i class="far fa-comment-dots" style="padding-right: 10px" onclick="comment.showCommentDiv(' + value.id + ',' + value.thread + ',' + value.depth + ')"></i>';
-                    htmlStr += '<i class="far fa-edit" style="padding-right: 10px"></i>';
-                    htmlStr += '<i class="far fa-trash-alt" style="padding-right: 10px" onclick="comment.deleteComment(' + boardId + ',' + value.id + ')"></i>';
+                    if (userEmail === value.userEntity.email) {
+                        htmlStr += '<i class="far fa-edit" style="padding-right: 10px"></i>';
+                        htmlStr += '<i class="far fa-trash-alt" style="padding-right: 10px" onclick="comment.deleteComment(' + boardId + ',' + value.id + ')"></i>';
+                    }
                 }
                 htmlStr += '</div></p>';
                 htmlStr += '<p style="padding-left: ' + (value.depth * 15) + 'px;">';
@@ -179,6 +183,7 @@ const comment = {
             alert("댓글이 등록되었습니다.")
             $('#txt-reComment').summernote('reset');
             setTimeout(function () {
+                comment.hiveCommentDiv();
                 comment.getCommentAll();
             }, 1);
         }).fail(err => {

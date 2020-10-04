@@ -17,7 +17,7 @@ import javax.persistence.*;
 public class CommentEntity extends BaseTimeEntity {
     @Id
     @Column(name = "comment_id")
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @JsonIgnore
@@ -26,7 +26,7 @@ public class CommentEntity extends BaseTimeEntity {
     private BoardEntity boardEntity;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId")
     private UserEntity userEntity;
 
@@ -36,9 +36,6 @@ public class CommentEntity extends BaseTimeEntity {
     @ColumnDefault("0")
     private int depth;
 
-    @Column(length = 10, nullable = false, updatable=false)
-    private String userName;
-
     @Column(length = 200, nullable = false)
     private String contents;
 
@@ -46,23 +43,22 @@ public class CommentEntity extends BaseTimeEntity {
 
     @Builder
     public CommentEntity(Long id, BoardEntity boardEntity, Long thread, int depth, UserEntity userEntity,
-                         String userName, String contents, String deleteYn) {
+                         String contents, String deleteYn) {
         this.id = id;
         this.boardEntity = boardEntity;
         this.thread = thread;
         this.userEntity = userEntity;
         this.depth = depth;
-        this.userName = userName;
         this.contents = contents;
         this.deleteYn = deleteYn;
     }
 
-    public void update(String contents, String deleteYn ) {
+    public void update(String contents, String deleteYn) {
         this.contents = contents;
         this.deleteYn = deleteYn;
     }
 
-    public void delete(String deleteYn ) {
+    public void delete(String deleteYn) {
         this.deleteYn = deleteYn;
     }
 }

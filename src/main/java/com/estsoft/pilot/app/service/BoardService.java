@@ -9,8 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.Optional;
 
 /**
@@ -28,8 +28,7 @@ public class BoardService {
                 .id(boardEntity.getId())
                 .thread(boardEntity.getThread())
                 .depth(boardEntity.getDepth())
-                .userId(boardEntity.getUserId())
-                .userName(boardEntity.getUserName())
+                .userEntity(boardEntity.getUserEntity())
                 .subject(boardEntity.getSubject())
                 .contents(boardEntity.getContents())
                 .commentEntities(boardEntity.getCommentEntities())
@@ -38,6 +37,7 @@ public class BoardService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public BoardDto findOne(Long id) throws BoardNotFoundException {
         Optional<BoardEntity> boardEntityWrapper = boardRepository.findById(id);
         if (!boardEntityWrapper.isPresent()) {
@@ -51,6 +51,7 @@ public class BoardService {
      * @param pageNum
      * @return Page<BoardDto>
      */
+    @Transactional(readOnly = true)
     public Page<BoardDto> findAllByOrderByIdDesc(Integer pageNum) {
         Page<BoardEntity> page = boardRepository.findAll(PageRequest.of(pageNum - 1, PAGE_POST_COUNT,
                 Sort.by("thread").descending().and(Sort.by("depth").descending())));

@@ -28,13 +28,13 @@ public class BoardAuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String httpMethod = request.getMethod();
 
-        if (httpMethod.equals("POST") || httpMethod.equals("PUT") || httpMethod.equals("PATCH") || httpMethod.equals("DELETE")) {
+        if (httpMethod.equals("PUT") || httpMethod.equals("PATCH") || httpMethod.equals("DELETE")) {
             Map<?, ?> pathVariables = (Map<?, ?>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
             Long id = Long.parseLong((String) pathVariables.get("id"));
             UserDto user = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             Optional<BoardEntity> boardEntityWrapper = boardRepository.findById(id);
-            String userId = boardEntityWrapper.get().getUserId();
+            String userId = boardEntityWrapper.get().getUserEntity().getEmail();
             if (!userId.equals(user.getEmail())) {
                 response.getOutputStream().println("NOT AUTHORIZE!!");
                 return false;

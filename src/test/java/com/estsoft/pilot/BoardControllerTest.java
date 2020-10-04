@@ -2,9 +2,13 @@ package com.estsoft.pilot;
 
 import com.estsoft.pilot.app.controller.BoardRestController;
 import com.estsoft.pilot.app.domain.entity.BoardEntity;
+import com.estsoft.pilot.app.domain.entity.UserEntity;
 import com.estsoft.pilot.app.domain.repository.BoardRepository;
+import com.estsoft.pilot.app.domain.repository.UserRepository;
 import com.estsoft.pilot.app.dto.BoardDto;
+import com.estsoft.pilot.app.dto.UserDto;
 import com.estsoft.pilot.app.service.BoardService;
+import com.estsoft.pilot.app.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
@@ -12,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.persistence.EntityManager;
@@ -35,6 +40,8 @@ public class BoardControllerTest {
     @Autowired
     EntityManager entityManager;
 
+    UserRepository userRepository;
+
 
     @Test
     @Description("게시글 단일 조회")
@@ -49,8 +56,7 @@ public class BoardControllerTest {
         BoardDto boardDto = new BoardDto();
         boardDto.setSubject("SUBJECT");
         boardDto.setContents("CONTENTS");
-        boardDto.setUserId("tester@gmail.com");
-        boardDto.setUserName("Tester");
+        //boardDto.setUserId("tester@gmail.com");
 
         boardService.saveAndUpdateBoard(boardDto);
     }
@@ -61,8 +67,7 @@ public class BoardControllerTest {
         BoardDto boardDto = new BoardDto();
         boardDto.setSubject("SUBJECT");
         boardDto.setContents("CONTENTS");
-        boardDto.setUserId("tester@gmail.com");
-        boardDto.setUserName("Tester");
+       // boardDto.setUserId("tester@gmail.com");
         boardDto.setThread(1000L);
         boardDto.setDepth(1);
 
@@ -74,8 +79,7 @@ public class BoardControllerTest {
     public void loopSave() {
         IntStream.rangeClosed(1, 10000).forEach(i -> {
             BoardEntity boardEntity = boardRepository.save(BoardEntity.builder()
-                    .userId("TESTER")
-                    .userName("TESTER")
+                  //  .userEntity("TESTER")
                     .thread(i + 1000L)
                     .depth(0)
                     .subject("TEST SUBJECT - " + i)
@@ -99,12 +103,13 @@ public class BoardControllerTest {
     }
 
     private BoardDto convertEntityToDto(BoardEntity boardEntity) {
+        Optional<UserEntity> userEntity = userRepository.findById(1L);
+
         return BoardDto.builder()
                 .id(boardEntity.getId())
                 .thread(boardEntity.getThread())
                 .depth(boardEntity.getDepth())
-                .userId(boardEntity.getUserId())
-                .userName(boardEntity.getUserName())
+                .userEntity(userEntity.get())
                 .subject(boardEntity.getSubject())
                 .contents(boardEntity.getContents())
                 .createdDate(boardEntity.getCreatedDate())

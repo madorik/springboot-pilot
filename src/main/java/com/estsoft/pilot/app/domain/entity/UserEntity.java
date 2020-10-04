@@ -18,7 +18,8 @@ import javax.persistence.*;
 public class UserEntity extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long userId;
+    @Column(name = "userId")
+    private Long id;
 
     @Column(unique = true, nullable = false, updatable=false)
     private String email;
@@ -31,7 +32,7 @@ public class UserEntity extends BaseTimeEntity {
 
     @Builder
     public UserEntity(Long id, String email, String userName, String password) {
-        this.userId = userId;
+        this.id = id;
         this.email = email;
         this.userName = userName;
         this.password = password;

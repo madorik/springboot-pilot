@@ -41,7 +41,7 @@ public class BoardRestController {
      * @throws BoardNotFoundException
      */
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody BoardDto boardDto) throws BoardNotFoundException {
+    public ResponseEntity<?> save(@RequestBody BoardDto boardDto) {
         boardService.saveAndUpdateBoard(boardDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

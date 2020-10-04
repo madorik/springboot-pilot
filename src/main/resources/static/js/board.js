@@ -60,8 +60,6 @@ const board = {
     savePost() {
         const data = {
             subject: $("#input-subject").val(),
-            userId: $("#hidden-email").val(),
-            userName: $("#input-author").val(),
             contents: $('#txt-content').summernote('code')
         }
 
@@ -87,12 +85,12 @@ const board = {
         const data = {
             subject: $("#input-subject").val(),
             userId: $("#hidden-email").val(),
-            userName: $("#input-author").val(),
             contents: $('#txt-content').summernote('code'),
             thread: parseInt(thread) - 1,
             depth: parseInt(depth) + 1
         }
 
+        console.log(data)
         $.ajax({
             type: "POST",
             url: '/api/v1/boards/' + id + '/reply',
@@ -101,7 +99,7 @@ const board = {
             data: JSON.stringify(data),
             headers: {'X-CSRF-TOKEN': this.token()}
         }).done(() => {
-            alert("게시글이 등록되었습니다.")
+            alert("답글이 등록되었습니다.")
             window.location.href = "/boards";
         }).fail(err => {
             alert(JSON.stringify(err))
