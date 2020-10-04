@@ -1,86 +1,72 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="" xmlns:c="http://www.w3.org/1999/XSL/Transform">
-
-<head th:replace="fragments/common :: html-head"></head>
-<body>
-<div class="container">
-    <div th:replace="fragments/common :: header('')"></div>
-    <div align="right" style="padding: 10px;">
-        <a th:href="@{/boards/save}" sec:authorize="isAuthenticated()">
-            <button class="btn btn-dark" type="button">글쓰기</button>
-        </a>
+<head>
+    <th:block th:insert="fragments/common :: common"></th:block>
+</head>
+<body class="ui grid">
+<div class="ui container eleven wide column main-container" style="padding: 50px 0">
+    <div th:replace="fragments/header :: header"></div>
+    <label th:text="'total count :' +  ${#numbers.formatInteger(boardList.totalElements, 0, 'COMMA')}"/>
+    <table class="table table-horizontal table-bordered table-hover">
+        <thead class="thead-strong thead-light">
+        <tr>
+            <th style="text-align: center;">#</th>
+            <th style="text-align: center;">제목</th>
+            <th style="text-align: center;">작성자</th>
+            <th style="text-align: center;">작성일</th>
+            <th style="text-align: center;">수정일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="board: ${boardList}">
+            <td width="10" th:text="${board.id}">0</td>
+            <td width="40%">
+                <c:if test="${board.depth > 0}">
+                    <img th:width="${board.depth * 10}"/>
+                    <img th:src="@{img/arrow.png}" th:width="15" th:if="${board.depth gt 0}"/>
+                </c:if>
+                <a th:text="${board.subject}" th:href="${'/boards/' + board.id}"></a>
+            </td>
+            <td width="10%" align="center" th:text="${board.userEntity.userName}"></td>
+            <td width="20%" align="center" th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td width="20%" align="center" th:text="${#temporals.format(board.modifiedDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div>
+        <a th:href="@{/boards/save}" sec:authorize="isAuthenticated()" class="right floated ui primary button"><i class="icon edit"></i>글쓰기</a>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <label th:text="'total count :' +  ${#numbers.formatInteger(boardList.totalElements, 3, 'COMMA')}"/>
-            <table class="table table-horizontal table-bordered table-hover">
-                <thead class="thead-strong thead-light">
-                <tr>
-                    <th style="text-align: center;">#</th>
-                    <th style="text-align: center;">제목</th>
-                    <th style="text-align: center;">작성자</th>
-                    <th style="text-align: center;">작성일</th>
-                    <th style="text-align: center;">수정일</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="board: ${boardList}">
-                    <td width="10" th:text="${board.id}">0</td>
-                    <td width="40%">
-                        <c:if test="${board.depth > 0}">
-                            <img th:width="${board.depth * 10}"/>
-                            <img th:src="@{img/arrow.png}" th:width="15" th:if="${board.depth gt 0}"/>
-                        </c:if>
-                        <a th:text="${board.subject}" th:href="${'/boards/' + board.id}">subject</a>
-                    </td>
-                    <td width="10%" align="center" th:text="${board.userEntity.userName}">userName</td>
-                    <td width="20%" align="center"
-                        th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm:ss')}">createdDate
-                    </td>
-                    <td width="20%" align="center"
-                        th:text="${#temporals.format(board.modifiedDate, 'yyyy-MM-dd HH:mm:ss')}">modifiedDate
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+    <nav style="text-align: center;">
+        <ul class="pagination" th:with="start=${T(Math).floor(boardList.number/10)*10 + 1}, last=(${start + 9 < boardList.totalPages ? start + 9 : boardList.totalPages})">
+            <li>
+                <a th:href="@{/boards(page=1)}" aria-label="First">
+                    <span aria-hidden="true">First</span>
+                </a>
+            </li>
 
-            <div>
-                <nav style="text-align: center;">
-                    <ul class="pagination"
-                        th:with="start=${T(Math).floor(boardList.number/10)*10 + 1},
-                    last=(${start + 9 < boardList.totalPages ? start + 9 : boardList.totalPages})">
-                        <li>
-                            <a th:href="@{/boards(page=1)}" aria-label="First">
-                                <span aria-hidden="true">First</span>
-                            </a>
-                        </li>
+            <li th:class="${boardList.first} ? 'disabled'">
+                <a th:href="${boardList.first} ? '#' :@{/boards(page=${boardList.number})}" aria-label="Previous">
+                    <span aria-hidden="true">&lt;</span>
+                </a>
+            </li>
 
-                        <li th:class="${boardList.first} ? 'disabled'">
-                            <a th:href="${boardList.first} ? '#' :@{/boards(page=${boardList.number})}" aria-label="Previous">
-                                <span aria-hidden="true">&lt;</span>
-                            </a>
-                        </li>
+            <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == boardList.number + 1} ? 'active'">
+                <a th:text="${page}" th:href="@{/boards(page=${page})}"></a>
+            </li>
 
-                        <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == boardList.number + 1} ? 'active'">
-                            <a th:text="${page}" th:href="@{/boards(page=${page})}"></a>
-                        </li>
+            <li th:class="${boardList.last} ? 'disabled'">
+                <a th:href="${boardList.last} ? '#' : @{/boards(page=${boardList.number + 2})}" aria-label="Next">
+                    <span aria-hidden="true">&gt;</span>
+                </a>
+            </li>
 
-                        <li th:class="${boardList.last} ? 'disabled'">
-                            <a th:href="${boardList.last} ? '#' : @{/boards(page=${boardList.number + 2})}" aria-label="Next">
-                                <span aria-hidden="true">&gt;</span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a th:href="@{/boards(page=${boardList.totalPages})}" aria-label="Last">
-                                <span aria-hidden="true">Last</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </div>
+            <li>
+                <a th:href="@{/boards(page=${boardList.totalPages})}" aria-label="Last">
+                    <span aria-hidden="true">Last</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
 </body>
 </html>

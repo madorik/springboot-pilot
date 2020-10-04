@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/common :: common"></th:block>
+</head>
+<body>
+<div th:fragment="footer" class="mt-1">
+    <th:block sec:authorize="isAuthenticated()">
+        <input type="hidden" id="hidden-email" th:value="${#authentication.principal.email}">
+        <input type="text" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    </th:block>
+    <script th:src="@{/js/user.js}"></script>
+    <script th:src="@{/js/board.js}"></script>
+    <script th:src="@{/js/comment.js}"></script>
+</div>
+</body>
+</html>

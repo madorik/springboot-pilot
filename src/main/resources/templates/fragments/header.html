@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/common :: common"></th:block>
+</head>
+<body>
+<div th:fragment="header" class="mt-1">
+    <div align="right">
+        <th:block sec:authorize="isAuthenticated()">
+            <label class="right item"  th:text="${#authentication.principal.email}"></label>
+        </th:block>
+    </div>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a th:href="@{/boards}" class="navbar-brand">Pilot</a>
+            </div>
+            <ul class="nav navbar-nav">
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a th:href="@{/}" sec:authorize="isAnonymous()"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                <li><a th:href="@{/user/signup}" sec:authorize="isAnonymous()" ><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                <li><a th:href="@{/user/logout}" sec:authorize="isAuthenticated()" ><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+</body>
+</html>

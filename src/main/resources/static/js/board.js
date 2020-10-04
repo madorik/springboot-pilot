@@ -54,6 +54,7 @@ const board = {
     },
 
     token() {
+        console.log($("input[name='_csrf']").val())
         return $("input[name='_csrf']").val();
     },
 
@@ -69,7 +70,7 @@ const board = {
             dataType: "text",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(data),
-            headers: {'X-CSRF-TOKEN': this.token()}
+            headers: {'X-CSRF-TOKEN': board.token()}
         }).done(() => {
             alert("게시글이 등록되었습니다.")
             window.location.href = "/boards";
@@ -97,7 +98,7 @@ const board = {
             dataType: "text",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(data),
-            headers: {'X-CSRF-TOKEN': this.token()}
+            headers: {'X-CSRF-TOKEN': board.token()}
         }).done(() => {
             alert("답글이 등록되었습니다.")
             window.location.href = "/boards";
@@ -114,6 +115,7 @@ const board = {
             contents: $('#txt-content').summernote('code'),
         }
 
+        console.log(data)
         $.ajax({
             type: "PATCH",
             url: "/api/v1/boards/" + id,

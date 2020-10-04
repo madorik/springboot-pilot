@@ -1,41 +1,36 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-
-<head th:replace="fragments/common :: html-head"></head>
-    <div class="container">
-        <div th:replace="fragments/common :: header('')"></div>
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-12">
-                    <h1>답글달기</h1>
-                </div>
-            </div>
-            <form>
-                <input type="hidden" id="hidden-id" th:value="${boardDto.id}">
-                <input type="hidden" id="hidden-thread" th:value="${boardDto.thread}">
-                <input type="hidden" id="hidden-depth" th:value="${boardDto.depth}">
-                <div class="form-group">
-                    <label class="col-form-label" for="input-subject">제목</label>
-                    <input type="text" class="form-control" placeholder="제목을 입력하세요." id="input-subject">
-                </div>
-
-                <div class="form-group">
-                    <label class="col-form-label" for="input-author">작성자</label>
-                    <input type="text" class="form-control" placeholder="작성자를 입력하세요." id="input-author" th:value="${#authentication.principal.username}" readonly>
-                </div>
-
-                <div class="form-group">
-                    <label for="txt-content">내용</label>
-                    <textarea class="form-control" id="txt-content" rows="3" placeholder="내용을 입력하세요."></textarea>
-                </div>
-            </form>
-            <div align="right">
-                <a th:href="${'/boards/' + boardDto.id}" role="button" class="btn btn-secondary">원글보기</a>
-                <a th:href="${'/boards'}" role="button" class="btn btn-secondary">취소</a>
-                <button type="button" class="btn btn-primary" id="btn-reply">등록</button>
-            </div>
+<head>
+    <th:block th:insert="fragments/common :: common"></th:block>
+</head>
+<body class="ui grid">
+<div class="ui container eleven wide column main-container" style="padding: 50px 0">
+    <h1>답글달기</h1>
+    <form>
+        <input type="hidden" id="hidden-id" th:value="${boardDto.id}">
+        <input type="hidden" id="hidden-thread" th:value="${boardDto.thread}">
+        <input type="hidden" id="hidden-depth" th:value="${boardDto.depth}">
+        <div class="form-group">
+            <label class="col-form-label" for="input-subject">제목</label>
+            <input type="text" class="form-control" placeholder="제목을 입력하세요." id="input-subject">
         </div>
-        <div th:replace="fragments/common :: footer">-- thymeleaf footer will be inserted here. --</div>
+
+        <div class="form-group">
+            <label class="col-form-label" for="input-author">작성자</label>
+            <input type="text" class="form-control" placeholder="작성자를 입력하세요." id="input-author" th:value="${#authentication.principal.username}" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="txt-content">내용</label>
+            <textarea class="form-control" id="txt-content" rows="3" placeholder="내용을 입력하세요."></textarea>
+        </div>
+    </form>
+    <div align="right">
+        <a th:href="${'/boards/' + boardDto.id}" role="button" class="ui button">원글보기</a>
+        <a th:href="${'/boards'}" role="button" class="ui button">취소</a>
+        <button type="button" id="btn-reply" class="ui primary button"><i class="icon edit"></i>등록</button>
     </div>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

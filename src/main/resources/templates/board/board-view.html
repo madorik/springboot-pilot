@@ -1,50 +1,48 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/common :: common"></th:block>
+</head>
+<body class="ui grid">
+    <div class="ui container eleven wide column main-container" style="padding: 50px 0">
+        <h1>게시글 조회</h1>
 
-<head th:replace="fragments/common :: html-head"></head>
-<body th:data-write-to="boardDto">
-    <script type="text/javascript" src="/js/comment.js"></script>
-    <div class="container">
-        <div th:replace="fragments/common :: header('')">-- thymeleaf header will be inserted here. --</div>
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-12" th:if="${boardDto.userEntity.email ne #authentication.principal.email}">
-                    <h1 th:text="${boardDto.subject}">게시글 조회</h1>
-                </div>
-                <div class="col-md-12" th:if="${boardDto.userEntity.email eq #authentication.principal.email}">
-                    <input type="text" class="form-control" placeholder="제목을 입력하세요." id="input-subject" th:value="${boardDto.subject}">
-                </div>
-            </div>
+        <div class="form-group">
+            <label class="col-form-label" for="input-subject">제목</label>
+            <input type="text" class="form-control" th:if="${boardDto.userEntity.email ne #authentication.principal.email}"
+                   th:value="${boardDto.subject}" readonly>
 
-            <div class="form-group">
-                <label class="col-form-label" for="input-id">글 번호</label>
-                <input type="text" class="form-control" readonly id="input-id" th:value="${boardDto.id}">
-            </div>
-
-            <div class="form-group">
-                <label class="col-form-label" for="input-author">작성자</label>
-                <input type="text" class="form-control" id="input-author" th:value="${boardDto.userEntity.userName}" readonly>
-            </div>
-
-            <div class="form-group" th:if="${boardDto.userEntity.email ne #authentication.principal.email}">
-                <label>내용</label>
-                <textarea class="form-control" id="view-content" th:text="${boardDto.contents}"></textarea>
-            </div>
-            <div class="form-group" th:if="${boardDto.userEntity.email eq #authentication.principal.email}">
-                <textarea class="form-control" id="txt-content" th:text="${boardDto.contents}" ></textarea>
-            </div>
-
-            <div align="right">
-                <a href="/boards" role="button" class="btn btn-secondary">목록</a>
-                <a th:href="${'/boards/' + boardDto.id + '/reply'}" sec:authorize="isAuthenticated()" class="btn btn-secondary">답글달기</a>
-                <button class="btn btn-primary active" id="btn-update" th:if="${boardDto.userEntity.email eq #authentication.principal.email}">수정</button>
-                <button class="btn btn-danger" id="btn-delete" th:if="${boardDto.userEntity.email eq #authentication.principal.email}">삭제</button>
-            </div>
+            <input type="text" class="form-control" id="input-subject" th:if="${boardDto.userEntity.email eq #authentication.principal.email}"
+                   th:value="${boardDto.subject}">
         </div>
-        <div class="col-md-12" style="padding-top: 60px;">
-            <div class="form-group">
-                <textarea class="form-control" id="txt-comment"></textarea>
-            </div>
+
+        <div class="form-group">
+            <label class="col-form-label" for="input-id">글 번호</label>
+            <input type="text" class="form-control" readonly id="input-id" th:value="${boardDto.id}">
+        </div>
+
+        <div class="form-group">
+            <label class="col-form-label" for="input-author">작성자</label>
+            <input type="text" class="form-control" id="input-author" th:value="${boardDto.userEntity.userName}" readonly>
+        </div>
+
+        <div class="form-group" th:if="${boardDto.userEntity.email ne #authentication.principal.email}">
+            <label>내용</label>
+            <textarea class="form-control" id="view-content" th:text="${boardDto.contents}"></textarea>
+        </div>
+        <div class="form-group" th:if="${boardDto.userEntity.email eq #authentication.principal.email}">
+            <label>내용</label>
+            <textarea class="form-control" id="txt-content" th:text="${boardDto.contents}" ></textarea>
+        </div>
+
+        <div align="right" style=" height: 50px; border-bottom:1px solid darkgray;">
+            <a th:href="@{/boards}" class="ui button">목록</a>
+            <a th:href="${'/boards/' + boardDto.id + '/reply'}" sec:authorize="isAuthenticated()" class="ui button">답글달기</a>
+            <button class="btn btn-primary active" id="btn-update" th:if="${boardDto.userEntity.email eq #authentication.principal.email}">수정</button>
+            <button class="btn btn-danger" id="btn-delete" th:if="${boardDto.userEntity.email eq #authentication.principal.email}">삭제</button>
+        </div>
+        <div class="form-group" style="padding-top: 30px;">
+            <textarea class="form-control" id="txt-comment"></textarea>
         </div>
         <div class="col-md-12" id="commentList" style="padding-top: 60px;"></div>
         <div id="replyDialog" style="width: 99%; display:none">
@@ -53,7 +51,7 @@
             <input type="hidden" id="hidden-depth" name="depth">
             <textarea class="form-control" id="txt-reComment"></textarea>
         </div>
-        <div th:replace="fragments/common :: footer">-- thymeleaf footer will be inserted here. --</div>
     </div>
+    <div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>
