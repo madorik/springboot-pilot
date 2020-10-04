@@ -17,4 +17,6 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     @Modifying
     @Query("UPDATE BoardEntity b SET b.thread = b.thread - 1 WHERE b.thread < :thread  AND b.thread > :prevThread")
     void updateBoardByThread(@Param("thread") Long thread, @Param("prevThread") Long prevThread);
+
+    void deleteById(Long id);
 }

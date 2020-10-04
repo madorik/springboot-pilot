@@ -22,10 +22,10 @@
         </rollingPolicy>
     </appender>
 
-<!--    <root level="INFO">
+   <root level="INFO">
         <appender-ref ref="STDOUT"/>
-    </root>-->
-    <logger name="com.estsoft.pilot"  level="DEBUG" additivity="false">
+    </root>
+    <!--<logger name="com.estsoft.pilot"  level="DEBUG" additivity="false">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE" />
     </logger>
@@ -33,5 +33,5 @@
     <logger name="org.springframework.web" level="DEBUG">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
-    </logger>
+    </logger>-->
 </configuration>

@@ -17,7 +17,6 @@ const comment = {
                 contents: '등록',
                 tooltip: "등록",
                 click: function (e) {
-                    console.log(c);
                     comment.saveComment();
                 },
             });
@@ -91,8 +90,8 @@ const comment = {
         document.body.appendChild(div);
     },
 
-    getCommentAll() {
-        const boardId = $("#hidden-id").val();
+    getCommentAll(boardId) {
+        boardId = boardId ? boardId : $("#hidden-id").val();
         if (!boardId) return;
         $.ajax({
             url: '/api/v1/boards/' + boardId + '/comments',
@@ -177,9 +176,11 @@ const comment = {
             data: JSON.stringify(data),
             headers: {'X-CSRF-TOKEN': board.token()}
         }).done(() => {
-            alert("게시글이 등록되었습니다.")
+            alert("댓글이 등록되었습니다.")
             $('#txt-reComment').summernote('reset');
-            comment.getCommentAll();
+            setTimeout(function () {
+                comment.getCommentAll();
+            }, 1);
         }).fail(err => {
             alert(JSON.stringify(err))
         })
@@ -197,8 +198,10 @@ const comment = {
             contentType: "application/json; charset=utf-8",
             headers: {'X-CSRF-TOKEN': board.token()}
         }).done(() => {
-            alert("게시글이 삭제되었습니다.");
-            comment.getCommentAll();
+            alert("댓글이 삭제되었습니다.");
+            setTimeout(function () {
+                comment.getCommentAll(boardId);
+            }, 1);
         }).fail(err => {
             alert(JSON.stringify(err))
         })

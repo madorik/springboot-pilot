@@ -43,6 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/user/check/**").anonymous()
                 .antMatchers("/boards/**").hasRole("USER")
+                .antMatchers("/api/v1/boards/**").hasRole("USER")
                 .antMatchers("/**").permitAll()
             .and()
                 .formLogin()
@@ -58,7 +59,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(true)
             .and()
                 .exceptionHandling()
-                .accessDeniedPage("/error/denied");
+                .accessDeniedPage("/error/denied")
+            .and()
+                .sessionManagement()
+                .invalidSessionUrl("/login")
+                .maximumSessions(1)
+                .expiredUrl("/login");
     }
 
     @Bean
