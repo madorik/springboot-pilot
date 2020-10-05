@@ -12,7 +12,7 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
 
     @Query("SELECT c FROM CommentEntity c JOIN FETCH c.boardEntity JOIN FETCH c.userEntity  WHERE c.boardEntity = ?1 ORDER BY c.thread DESC")
-    List<CommentEntity> findByBoard(BoardEntity boardEntity);
+    List<CommentEntity> findByBoard(@Param("boardEntity") BoardEntity boardEntity);
 
     @Query(nativeQuery = true, value = "SELECT COALESCE(MAX(c.thread), 0) FROM comment c WHERE c.depth = 0 AND c.thread < ?1 AND c.board_id = ?2 ORDER BY c.thread DESC LIMIT 1")
     Long findByPrevCommentThread(@Param("thread") Long thread, @Param("boardId") Long boardId);
@@ -22,5 +22,5 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
     void updateCommentByThread(@Param("thread") Long thread, @Param("prevThread") Long prevThread, @Param("boardEntity") BoardEntity boardEntity);
 
     @Query("SELECT COALESCE(MAX(c.thread), 0) + 1000 FROM CommentEntity c WHERE c.boardEntity.id = :boardId")
-    Long findMaxCommentThreadByBoardId(Long boardId);
+    Long findMaxCommentThreadByBoardId(@Param("boardId") Long boardId);
 }

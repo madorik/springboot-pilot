@@ -24,13 +24,13 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     @Query("UPDATE BoardEntity b SET b.thread = b.thread - 1 WHERE b.thread < :thread  AND b.thread > :prevThread")
     void updateBoardByThread(@Param("thread") Long thread, @Param("prevThread") Long prevThread);
 
-    void deleteById(Long id);
+    void deleteById(@Param("id") Long id);
 
     @EntityGraph(value = "board-with-user", type = EntityGraphType.FETCH)
     @Override
-    Page<BoardEntity> findAll(Pageable pageable);
+    Page<BoardEntity> findAll(@Param("pageable") Pageable pageable);
 
     @EntityGraph(value = "board-with-user", type = EntityGraphType.FETCH)
     @Override
-    Optional<BoardEntity> findById(Long id);
+    Optional<BoardEntity> findById(@Param("id") Long id);
 }
