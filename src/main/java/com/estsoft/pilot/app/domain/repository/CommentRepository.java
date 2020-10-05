@@ -2,6 +2,9 @@ package com.estsoft.pilot.app.domain.repository;
 
 import com.estsoft.pilot.app.domain.entity.BoardEntity;
 import com.estsoft.pilot.app.domain.entity.CommentEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,4 +26,7 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
 
     @Query("SELECT COALESCE(MAX(c.thread), 0) + 1000 FROM CommentEntity c WHERE c.boardEntity.id = :boardId")
     Long findMaxCommentThreadByBoardId(@Param("boardId") Long boardId);
+
+    @EntityGraph(value = "comment-with-all", type = EntityGraph.EntityGraphType.FETCH)
+    Page<CommentEntity> findAllByBoardEntity(BoardEntity boardEntity, Pageable pageable);
 }

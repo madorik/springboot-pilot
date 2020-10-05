@@ -75,7 +75,7 @@ const board = {
             alert("게시글이 등록되었습니다.")
             window.location.href = "/boards";
         }).fail(err => {
-            alert(JSON.stringify(err))
+            console.log(JSON.stringify(err))
         })
     },
 
@@ -103,7 +103,7 @@ const board = {
             alert("답글이 등록되었습니다.")
             window.location.href = "/boards";
         }).fail(err => {
-            alert(JSON.stringify(err))
+            console.log(JSON.stringify(err))
         })
     },
 
@@ -127,7 +127,7 @@ const board = {
             alert("게시글이 수정되었습니다.")
             window.location.href = "/boards";
         }).fail(err => {
-            alert(JSON.stringify(err))
+            console.log(JSON.stringify(err))
         })
     },
     delete() {
@@ -146,7 +146,7 @@ const board = {
             alert("게시글이 삭제되었습니다.")
             window.location.href = "/boards";
         }).fail(err => {
-            alert(JSON.stringify(err))
+            console.log(JSON.stringify(err))
         })
     }
 }

@@ -7,6 +7,7 @@ import com.estsoft.pilot.app.service.CommentService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +30,9 @@ public class CommentRestController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<List<CommentDto>> reply(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(commentService.findByBoard(new BoardDto(id).toEntity()));
+    public ResponseEntity<List<CommentDto>> reply(@PathVariable("id") Long id, @RequestParam(value = "page", defaultValue = "1") Integer pageNum) {
+        Page<CommentDto> commentDtoPages = commentService.findByBoard(new BoardDto(id), pageNum);
+        return ResponseEntity.ok(commentDtoPages.getContent());
     }
 
     /**

@@ -2,7 +2,6 @@ package com.estsoft.pilot.app.service;
 
 import com.estsoft.pilot.app.controller.BoardRestController;
 import com.estsoft.pilot.app.controller.BoardRestController.BoardNotFoundException;
-import com.estsoft.pilot.app.domain.entity.BoardEntity;
 import com.estsoft.pilot.app.domain.entity.CommentEntity;
 import com.estsoft.pilot.app.domain.repository.CommentRepository;
 import com.estsoft.pilot.app.dto.BoardDto;
@@ -10,11 +9,12 @@ import com.estsoft.pilot.app.dto.CommentDto;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -50,13 +50,10 @@ public class CommentService {
         return this.convertEntityToDto(commentEntityWrapper.get());
     }
 
-    public List<CommentDto> findByBoard(BoardEntity boardEntity) {
-        List<CommentEntity> commentEntities = commentRepository.findByBoard(boardEntity);
-        List<CommentDto> commentDtoList = new ArrayList<>();
-        for (CommentEntity commentEntity : commentEntities) {
-            commentDtoList.add(this.convertEntityToDto(commentEntity));
-        }
-        return commentDtoList;
+    public Page<CommentDto> findByBoard(BoardDto boardDto, Integer pageNum) {
+        Page<CommentEntity> page = commentRepository.findAllByBoardEntity(boardDto.toEntity(), PageRequest.of(pageNum - 1, PAGE_POST_COUNT,
+                Sort.by("thread").descending().and(Sort.by("depth").descending())));
+        return page.map(this::convertEntityToDto);
     }
 
     /**

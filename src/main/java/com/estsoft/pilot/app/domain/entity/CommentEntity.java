@@ -12,6 +12,12 @@ import javax.persistence.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@NamedEntityGraphs({
+        @NamedEntityGraph(name = "comment-with-all", attributeNodes = {
+                @NamedAttributeNode(value = "boardEntity"),
+                @NamedAttributeNode(value = "userEntity")
+        })
+})
 @Entity
 @Table(name = "comment")
 public class CommentEntity extends BaseTimeEntity {

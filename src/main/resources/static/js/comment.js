@@ -9,6 +9,17 @@ const comment = {
             self.initSummernote();
             self.getCommentAll();
         }, 1);
+
+        const docHeight = $(document).height();
+        const winHeight = $(window).height();
+        let page = 1;
+        $(window).scroll(function () {
+            const top = $(window).scrollTop();
+            if (top >= (docHeight - winHeight)) {
+                page++;
+                comment.getCommentAll(undefined, page);
+            }
+        });
     },
 
     initSummernote() {
@@ -90,13 +101,14 @@ const comment = {
         document.body.appendChild(div);
     },
 
-    getCommentAll(boardId) {
+    getCommentAll(boardId, page) {
         boardId = boardId ? boardId : $("#hidden-id").val();
+        page = page ? page : 1;
         if (!boardId) return;
         const userEmail = $('#hidden-email').val();
 
         $.ajax({
-            url: '/api/v1/boards/' + boardId + '/comments',
+            url: '/api/v1/boards/' + boardId + '/comments?page='+page,
             type: "GET",
             dataType: "text",
             contentType: "application/json; charset=utf-8",
@@ -127,7 +139,7 @@ const comment = {
                 htmlStr += '</p>';
                 htmlStr += '</div>';
             });
-            $("#commentList").html(htmlStr);
+            $("#commentList").append(htmlStr);
         }).fail(err => {
             alert(JSON.stringify(err))
         });
@@ -156,7 +168,7 @@ const comment = {
                 comment.getCommentAll();
             }, 1)
         }).fail(err => {
-            alert(JSON.stringify(err))
+            console.log(JSON.stringify(err))
         })
     },
 
@@ -187,7 +199,7 @@ const comment = {
                 comment.getCommentAll();
             }, 1);
         }).fail(err => {
-            alert(JSON.stringify(err))
+            console.log(JSON.stringify(err))
         })
     },
 
@@ -208,7 +220,7 @@ const comment = {
                 comment.getCommentAll(boardId);
             }, 1);
         }).fail(err => {
-            alert(JSON.stringify(err))
+            console.log(JSON.stringify(err))
         })
     }
 }

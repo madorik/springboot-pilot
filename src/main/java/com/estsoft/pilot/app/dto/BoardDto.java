@@ -3,7 +3,10 @@ package com.estsoft.pilot.app.dto;
 import com.estsoft.pilot.app.domain.entity.BoardEntity;
 import com.estsoft.pilot.app.domain.entity.CommentEntity;
 import com.estsoft.pilot.app.domain.entity.UserEntity;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
