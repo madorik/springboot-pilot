@@ -10,12 +10,9 @@ const comment = {
             self.getCommentAll();
         }, 1);
 
-        const docHeight = $(document).height();
-        const winHeight = $(window).height();
         let page = 1;
         $(window).scroll(function () {
-            const top = $(window).scrollTop();
-            if (top >= (docHeight - winHeight)) {
+            if (($(window).scrollTop() + 20) >= ($(document).height() - $(window).height())) {
                 page++;
                 comment.getCommentAll(undefined, page);
             }
