@@ -2,22 +2,28 @@ package com.estsoft.pilot.app.domain.entity;
 
 import com.estsoft.pilot.app.domain.BaseTimeEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@NamedEntityGraphs({
+        @NamedEntityGraph(name = "board-with-user", attributeNodes = {
+                @NamedAttributeNode(value = "userEntity"),
+        })
+})
 @Entity
 @Table(name = "board")
 public class BoardEntity extends BaseTimeEntity {
     @Id
     @Column(name = "board_id")
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ColumnDefault("0")
@@ -26,9 +32,8 @@ public class BoardEntity extends BaseTimeEntity {
     @ColumnDefault("0")
     private int depth;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private UserEntity userEntity;
 
     @Column(length = 100, nullable = false)
@@ -38,7 +43,7 @@ public class BoardEntity extends BaseTimeEntity {
     private String contents;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "boardEntity", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "boardEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommentEntity> commentEntities;
 
     @Builder

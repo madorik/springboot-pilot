@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
 
-    @Query("SELECT c FROM CommentEntity c WHERE c.boardEntity = ?1 ORDER BY c.thread DESC")
+    @Query("SELECT c FROM CommentEntity c JOIN FETCH c.boardEntity JOIN FETCH c.userEntity  WHERE c.boardEntity = ?1 ORDER BY c.thread DESC")
     List<CommentEntity> findByBoard(BoardEntity boardEntity);
 
     @Query(nativeQuery = true, value = "SELECT COALESCE(MAX(c.thread), 0) FROM comment c WHERE c.depth = 0 AND c.thread < ?1 AND c.board_id = ?2 ORDER BY c.thread DESC LIMIT 1")

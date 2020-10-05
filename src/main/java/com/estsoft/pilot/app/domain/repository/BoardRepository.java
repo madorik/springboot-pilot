@@ -1,10 +1,16 @@
 package com.estsoft.pilot.app.domain.repository;
 
 import com.estsoft.pilot.app.domain.entity.BoardEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.EntityGraph.EntityGraphType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
 
@@ -19,4 +25,12 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     void updateBoardByThread(@Param("thread") Long thread, @Param("prevThread") Long prevThread);
 
     void deleteById(Long id);
+
+    @EntityGraph(value = "board-with-user", type = EntityGraphType.FETCH)
+    @Override
+    Page<BoardEntity> findAll(Pageable pageable);
+
+    @EntityGraph(value = "board-with-user", type = EntityGraphType.FETCH)
+    @Override
+    Optional<BoardEntity> findById(Long id);
 }
