@@ -103,7 +103,6 @@ const comment = {
         page = page ? page : 1;
         if (!boardId) return;
         const userEmail = $('#hidden-email').val();
-
         $.ajax({
             url: '/api/v1/boards/' + boardId + '/comments?page='+page,
             type: "GET",
@@ -161,9 +160,10 @@ const comment = {
         }).done(() => {
             alert("댓글이 등록되었습니다.");
             $('#txt-comment').summernote('reset');
-            setTimeout(function () {
+            location.reload();
+           /* setTimeout(function () {
                 comment.getCommentAll();
-            }, 1)
+            }, 1)*/
         }).fail(err => {
             console.log(JSON.stringify(err))
         })
@@ -191,10 +191,11 @@ const comment = {
         }).done(() => {
             alert("댓글이 등록되었습니다.")
             $('#txt-reComment').summernote('reset');
-            setTimeout(function () {
+            location.reload();
+            /*setTimeout(function () {
                 comment.hiveCommentDiv();
                 comment.getCommentAll();
-            }, 1);
+            }, 1);*/
         }).fail(err => {
             console.log(JSON.stringify(err))
         })
@@ -213,9 +214,10 @@ const comment = {
             headers: {'X-CSRF-TOKEN': board.token()}
         }).done(() => {
             alert("댓글이 삭제되었습니다.");
-            setTimeout(function () {
+            location.reload();
+           /* setTimeout(function () {
                 comment.getCommentAll(boardId);
-            }, 1);
+            }, 1);*/
         }).fail(err => {
             console.log(JSON.stringify(err))
         })
