@@ -39,7 +39,7 @@ const comment = {
                 contents: '<i class="fa fa-pencil"/>취소',
                 tooltip: '취소',
                 click: function () {
-                    //comment.saveComment();
+                    comment.hiveCommentDiv();
                 },
             });
             return button.render();

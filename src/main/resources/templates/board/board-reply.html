@@ -5,6 +5,7 @@
 </head>
 <body class="ui grid">
 <div class="ui container eleven wide column main-container" style="padding: 50px 0">
+    <div th:replace="fragments/header :: header"></div>
     <h1>답글달기</h1>
     <form>
         <input type="hidden" id="hidden-id" th:value="${boardDto.id}">
