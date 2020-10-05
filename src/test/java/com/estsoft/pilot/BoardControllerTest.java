@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -100,6 +101,13 @@ public class BoardControllerTest {
     public void getMaxId() {
         Long result = boardRepository.findMaxBoardThread();
         logger.info("[[[[[[[[[[ " + result + " ]]]]]]]]]]]]]");
+    }
+
+    @Test
+    @Description("게시판 검색")
+    public void search() {
+        Page<BoardDto> boardDtoPage = boardService.findAllBySubject(1, "123");
+        logger.info("boardDtoPage >>> " + boardDtoPage.getContent().toString());
     }
 
     private BoardDto convertEntityToDto(BoardEntity boardEntity) {

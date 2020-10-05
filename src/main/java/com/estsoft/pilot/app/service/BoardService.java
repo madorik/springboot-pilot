@@ -52,8 +52,8 @@ public class BoardService {
      * @return Page<BoardDto>
      */
     @Transactional(readOnly = true)
-    public Page<BoardDto> findAllByOrderByIdDesc(Integer pageNum) {
-        Page<BoardEntity> page = boardRepository.findAll(PageRequest.of(pageNum - 1, PAGE_POST_COUNT,
+    public Page<BoardDto> findAllBySubject(Integer pageNum, String subject) {
+        Page<BoardEntity> page = boardRepository.findBySubject(subject, PageRequest.of(pageNum - 1, PAGE_POST_COUNT,
                 Sort.by("thread").descending().and(Sort.by("depth").descending())));
         return page.map(this::convertEntityToDto);
     }

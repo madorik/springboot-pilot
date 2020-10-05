@@ -33,4 +33,10 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     @EntityGraph(value = "board-with-user", type = EntityGraphType.FETCH)
     @Override
     Optional<BoardEntity> findById(@Param("id") Long id);
+
+    @Query(
+            value = "SELECT b FROM BoardEntity b JOIN FETCH b.userEntity WHERE b.subject LIKE %:subject%",
+            countQuery = "SELECT COUNT(b.id) FROM BoardEntity b WHERE b.subject LIKE %:subject%"
+    )
+    Page<BoardEntity> findBySubject(@Param("subject") String subject, @Param("pageable") Pageable pageable);
 }

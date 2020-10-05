@@ -25,8 +25,10 @@ public class BoardController {
     private BoardService boardService;
 
     @GetMapping
-    public String list(Model model, @RequestParam(value = "page", defaultValue = "1") Integer pageNum) {
-        Page<BoardDto> boardList = boardService.findAllByOrderByIdDesc(pageNum);
+    public String list(Model model, @RequestParam(value = "page", defaultValue = "1") Integer pageNum,
+                                    @RequestParam(value = "subject", defaultValue = "") String subject) {
+
+        Page<BoardDto> boardList = boardService.findAllBySubject(pageNum, subject);
         model.addAttribute("boardList", boardList);
         return "board/board-list";
     }
