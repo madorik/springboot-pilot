@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest
 public class LogbackTest {
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Test

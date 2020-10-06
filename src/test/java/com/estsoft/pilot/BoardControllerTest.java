@@ -1,14 +1,11 @@
 package com.estsoft.pilot;
 
-import com.estsoft.pilot.app.controller.BoardRestController;
 import com.estsoft.pilot.app.domain.entity.BoardEntity;
 import com.estsoft.pilot.app.domain.entity.UserEntity;
 import com.estsoft.pilot.app.domain.repository.BoardRepository;
 import com.estsoft.pilot.app.domain.repository.UserRepository;
 import com.estsoft.pilot.app.dto.BoardDto;
-import com.estsoft.pilot.app.dto.UserDto;
 import com.estsoft.pilot.app.service.BoardService;
-import com.estsoft.pilot.app.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
@@ -17,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.persistence.EntityManager;
@@ -30,6 +26,7 @@ import java.util.stream.IntStream;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class BoardControllerTest {
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired

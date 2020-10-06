@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 @Data
 @ConfigurationProperties(prefix = "app")
 public class PilotProperties {
+
     @Value("${app.file.dir}")
     private String fileDir;
 

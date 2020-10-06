@@ -4,15 +4,11 @@ import com.estsoft.pilot.app.controller.BoardRestController.BoardNotFoundExcepti
 import com.estsoft.pilot.app.dto.BoardDto;
 import com.estsoft.pilot.app.service.BoardService;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Create by madorik on 2020-09-20
@@ -20,9 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 @AllArgsConstructor
 @RequestMapping("/boards")
 @Controller
+@Slf4j
 public class BoardController {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private BoardService boardService;
+
+    private final BoardService boardService;
 
     @GetMapping
     public String list(Model model, @RequestParam(value = "page", defaultValue = "1") Integer pageNum,

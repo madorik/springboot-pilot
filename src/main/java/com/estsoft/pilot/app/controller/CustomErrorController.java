@@ -15,6 +15,7 @@ import java.util.Date;
  */
 @Controller
 public class CustomErrorController implements ErrorController {
+
     @RequestMapping(value = "/error")
     public String handleError(HttpServletRequest request, Model model) {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);

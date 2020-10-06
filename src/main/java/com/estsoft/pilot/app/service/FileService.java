@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -51,10 +52,10 @@ public class FileService {
      * @return
      * @throws Exception
      */
-    public FileEntity store(MultipartFile file) throws Exception {
+    public FileEntity store(MultipartFile file) throws IOException {
         try {
             if (file.isEmpty()) {
-                throw new Exception("Failed to store empty file " + file.getOriginalFilename());
+                throw new FileNotFoundException("Failed to store empty file " + file.getOriginalFilename());
             }
             Path rootLocation = Paths.get(pilotProperties.getFileDir());
             String saveFileName = fileSave(rootLocation.toString(), file);
@@ -68,7 +69,7 @@ public class FileService {
             return fileRepository.save(fileDto.toEntity());
 
         } catch (IOException e) {
-            throw new Exception("Failed to store file " + file.getOriginalFilename(), e);
+            throw new IOException("Failed to store file " + file.getOriginalFilename(), e);
         }
     }
 

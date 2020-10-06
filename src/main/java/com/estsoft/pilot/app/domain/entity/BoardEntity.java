@@ -43,7 +43,7 @@ public class BoardEntity extends BaseTimeEntity {
     private String contents;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "boardEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "boardEntity", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<CommentEntity> commentEntities;
 
     @Builder

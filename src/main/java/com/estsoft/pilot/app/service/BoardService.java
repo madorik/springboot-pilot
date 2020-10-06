@@ -20,7 +20,9 @@ import java.util.Optional;
 @Service
 @Transactional
 public class BoardService {
+
     private BoardRepository boardRepository;
+
     private static final int PAGE_POST_COUNT = 20;
 
     private BoardDto convertEntityToDto(BoardEntity boardEntity) {

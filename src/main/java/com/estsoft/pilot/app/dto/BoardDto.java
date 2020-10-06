@@ -16,6 +16,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class BoardDto {
+
     private Long id;
     private Long thread;
     private int depth;

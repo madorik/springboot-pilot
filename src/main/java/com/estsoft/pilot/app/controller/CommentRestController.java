@@ -5,8 +5,7 @@ import com.estsoft.pilot.app.dto.BoardDto;
 import com.estsoft.pilot.app.dto.CommentDto;
 import com.estsoft.pilot.app.service.CommentService;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +18,11 @@ import java.util.List;
  */
 @AllArgsConstructor
 @RestController
+@Slf4j
 @RequestMapping(value = "/api/v1/boards/{id}/comments")
 public class CommentRestController {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private CommentService commentService;
+
+    private final CommentService commentService;
 
     /**
      * 상세 게시글에 포함되어 있는 comment 목록을 보여준다.
@@ -42,7 +42,7 @@ public class CommentRestController {
      * @return
      */
     @PostMapping
-    public ResponseEntity<?> save(@PathVariable("id") Long id, @RequestBody CommentDto commentDto) {
+    public ResponseEntity<Void> save(@PathVariable("id") Long id, @RequestBody CommentDto commentDto) {
         commentService.saveAndUpdateComment(commentDto, id);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -55,7 +55,7 @@ public class CommentRestController {
      * @throws BoardRestController.BoardNotFoundException
      */
     @PostMapping("/reply")
-    public ResponseEntity<?> reply(@PathVariable("id") Long id, @RequestBody CommentDto commentDto) {
+    public ResponseEntity<Void> reply(@PathVariable("id") Long id, @RequestBody CommentDto commentDto) {
         commentService.saveReplyByComment(id, commentDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -67,7 +67,7 @@ public class CommentRestController {
      * @throws BoardNotFoundException
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Long id) throws BoardNotFoundException {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) throws BoardNotFoundException {
         commentService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

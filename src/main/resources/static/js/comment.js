@@ -107,7 +107,7 @@ const comment = {
             url: '/api/v1/boards/' + boardId + '/comments?page='+page,
             type: "GET",
             dataType: "text",
-            contentType: "application/json; charset=utf-8",
+            contentType: "application/json;",
         }).done((data) => {
             let htmlStr = '';
             $.each(JSON.parse(data), function (key, value) {
@@ -154,7 +154,7 @@ const comment = {
             type: "POST",
             url: '/api/v1/boards/' + id + '/comments',
             dataType: "text",
-            contentType: "application/json; charset=utf-8",
+            contentType: "application/json;",
             data: JSON.stringify(data),
             headers: {'X-CSRF-TOKEN': board.token()}
         }).done(() => {
@@ -185,7 +185,7 @@ const comment = {
             type: "POST",
             url: '/api/v1/boards/' + id + '/comments/reply',
             dataType: "text",
-            contentType: "application/json; charset=utf-8",
+            contentType: "application/json;",
             data: JSON.stringify(data),
             headers: {'X-CSRF-TOKEN': board.token()}
         }).done(() => {
@@ -210,7 +210,7 @@ const comment = {
             type: 'PUT',
             url: '/api/v1/boards/' + boardId + '/comments/' + commentId,
             dataType: "text",
-            contentType: "application/json; charset=utf-8",
+            contentType: "application/json;",
             headers: {'X-CSRF-TOKEN': board.token()}
         }).done(() => {
             alert("댓글이 삭제되었습니다.");

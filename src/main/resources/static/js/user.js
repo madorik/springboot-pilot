@@ -33,7 +33,7 @@ const user = {
             type: "POST",
             url: "/user/check/mail",
             dataType: "json",
-            contentType: "application/json; charset=utf-8",
+            contentType: "application/json;",
             data: JSON.stringify(data),
             headers: {'X-CSRF-TOKEN': token}
         }).done((count) => {

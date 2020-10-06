@@ -22,6 +22,7 @@ import java.util.Arrays;
 @Log
 @Commit
 public class CommentRepositoryTest {
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired

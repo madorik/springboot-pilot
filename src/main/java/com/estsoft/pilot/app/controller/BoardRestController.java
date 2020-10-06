@@ -3,11 +3,9 @@ package com.estsoft.pilot.app.controller;
 import com.estsoft.pilot.app.dto.BoardDto;
 import com.estsoft.pilot.app.service.BoardService;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -16,20 +14,20 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @RestController
 @RequestMapping(value = "/api/v1/boards")
+@Slf4j
 public class BoardRestController {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private BoardService boardService;
+
+    private final BoardService boardService;
 
     /**
      * 게시글 상세조회
      * @param id
-     * @param model
      * @return
-     * @throws BoardRestController.BoardNotFoundException
+     * @throws BoardNotFoundException
      */
     @GetMapping("/{id}")
-    public ResponseEntity<?> detail(@PathVariable("id") Long id, Model model) throws BoardNotFoundException {
-        logger.info("boards detail");
+    public ResponseEntity<BoardDto> detail(@PathVariable("id") Long id) throws BoardNotFoundException {
+        log.info("boards detail");
         BoardDto boardDto = boardService.findOne(id);
         return new ResponseEntity<BoardDto>(boardDto, HttpStatus.OK);
     }
@@ -38,10 +36,9 @@ public class BoardRestController {
      * 원글 등록
      * @param boardDto
      * @return
-     * @throws BoardNotFoundException
      */
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody BoardDto boardDto) {
+    public ResponseEntity<Void> save(@RequestBody BoardDto boardDto) {
         boardService.saveAndUpdateBoard(boardDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -52,7 +49,7 @@ public class BoardRestController {
      * @return
      */
     @PatchMapping(value = "/{id}")
-    public ResponseEntity<?> edit(@PathVariable("id") Long id, @RequestBody BoardDto boardDto) throws BoardNotFoundException {
+    public ResponseEntity<Void> edit(@PathVariable("id") Long id, @RequestBody BoardDto boardDto) throws BoardNotFoundException {
         boardService.edit(id, boardDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -63,7 +60,7 @@ public class BoardRestController {
      * @return
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         boardService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -76,15 +73,11 @@ public class BoardRestController {
      * @throws BoardNotFoundException
      */
     @PostMapping("/{id}/reply")
-    public ResponseEntity<?> reply(@PathVariable("id") Long id, @RequestBody BoardDto boardDto) {
+    public ResponseEntity<Void> reply(@PathVariable("id") Long id, @RequestBody BoardDto boardDto) {
         boardService.saveBoardReply(boardDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @ExceptionHandler(BoardNotFoundException.class)
-    protected ResponseEntity<?> handleBoardNotFoundException(BoardNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
 
     public static class BoardNotFoundException extends Exception {
         public BoardNotFoundException() {

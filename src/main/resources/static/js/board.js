@@ -68,7 +68,7 @@ const board = {
             type: "POST",
             url: '/api/v1/boards',
             dataType: "text",
-            contentType: "application/json; charset=utf-8",
+            contentType: "application/json;",
             data: JSON.stringify(data),
             headers: {'X-CSRF-TOKEN': board.token()}
         }).done(() => {
@@ -96,7 +96,7 @@ const board = {
             type: "POST",
             url: '/api/v1/boards/' + id + '/reply',
             dataType: "text",
-            contentType: "application/json; charset=utf-8",
+            contentType: "application/json;",
             data: JSON.stringify(data),
             headers: {'X-CSRF-TOKEN': board.token()}
         }).done(() => {
@@ -115,13 +115,12 @@ const board = {
             contents: $('#txt-content').summernote('code'),
         }
 
-        console.log(data)
         $.ajax({
             type: "PATCH",
             url: "/api/v1/boards/" + id,
             data: JSON.stringify(data),
             dataType: "text",
-            contentType: "application/json; charset=utf-8",
+            contentType: "application/json;",
             headers: {'X-CSRF-TOKEN': this.token()}
         }).done(() => {
             alert("게시글이 수정되었습니다.")
@@ -140,7 +139,7 @@ const board = {
             type: "DELETE",
             url: "/api/v1/boards/" + id,
             dataType: "text",
-            contentType: "application/json; charset=utf-8",
+            contentType: "application/json;",
             headers: {'X-CSRF-TOKEN': this.token()}
         }).done(() => {
             alert("게시글이 삭제되었습니다.")

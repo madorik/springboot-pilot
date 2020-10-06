@@ -3,7 +3,6 @@ package com.estsoft.pilot.app.config;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -13,9 +12,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebServiceConfig implements WebMvcConfigurer {
 
-    private BoardAuthInterceptor boardAuthInterceptor;
+    private final BoardAuthInterceptor boardAuthInterceptor;
 
-    private CommentAuthInterceptor commentAuthInterceptor;
+    private final CommentAuthInterceptor commentAuthInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -27,11 +26,6 @@ public class WebServiceConfig implements WebMvcConfigurer {
         registry.addInterceptor(commentAuthInterceptor)
                 .excludePathPatterns("/api/v1/boards/**/comments")
                 .addPathPatterns("/api/v1/boards/**/comments/**");
-
-    }
-
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
     }
 }

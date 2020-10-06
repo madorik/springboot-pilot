@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @AllArgsConstructor
 public class UserController {
-    private UserService userService;
+
+    private final UserService userService;
 
     @GetMapping("/user/signup")
     public String signup() {

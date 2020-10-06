@@ -1,7 +1,6 @@
 package com.estsoft.pilot.app.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
@@ -12,8 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 public class LoginFailureHandler implements AuthenticationFailureHandler {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
@@ -25,7 +24,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         } else {
             request.setAttribute("loginFailMsg", "로그인에 실패하였습니다.");
         }
-        logger.error(exception.getMessage());
+        log.error(exception.getMessage());
         request.getRequestDispatcher("/login/fail").forward(request, response);
     }
 }

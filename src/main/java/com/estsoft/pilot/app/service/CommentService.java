@@ -7,8 +7,6 @@ import com.estsoft.pilot.app.domain.repository.CommentRepository;
 import com.estsoft.pilot.app.dto.BoardDto;
 import com.estsoft.pilot.app.dto.CommentDto;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -24,8 +22,9 @@ import java.util.Optional;
 @Service
 @Transactional
 public class CommentService {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private CommentRepository commentRepository;
+
     private static final int PAGE_POST_COUNT = 20;
 
     private CommentDto convertEntityToDto(CommentEntity commentEntity) {
