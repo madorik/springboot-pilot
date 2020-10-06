@@ -46,10 +46,12 @@
             <textarea class="form-control" id="txt-comment"></textarea>
         </div>
         <div class="col-md-12" id="commentList" style="padding-top: 60px;"></div>
-        <div id="replyDialog" style="width: 99%; display:none">
-            <input type="hidden" id="hidden-id" th:value="${boardDto.id}">
-            <input type="hidden" id="hidden-thread" name="thread">
-            <input type="hidden" id="hidden-depth" name="depth">
+        <div id="comment-dialog" style="width: 99%; display:none">
+            <input type="hidden" id="hidden-board-id" th:value="${boardDto.id}">
+            <input type="hidden" id="hidden-comment-id">
+            <input type="hidden" id="hidden-reply-id">
+            <input type="hidden" id="hidden-thread">
+            <input type="hidden" id="hidden-depth">
             <textarea class="form-control" id="txt-reComment"></textarea>
         </div>
     </div>

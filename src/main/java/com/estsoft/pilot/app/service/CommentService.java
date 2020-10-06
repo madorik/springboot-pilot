@@ -93,4 +93,15 @@ public class CommentService {
 
         commentRepository.save(commentDto.toEntity());
     }
+
+    /**
+     * 코멘트 내용 업데이트
+     * @param id
+     * @throws BoardNotFoundException
+     */
+    public void saveComment(Long id, CommentDto commentDto) throws BoardNotFoundException {
+        CommentDto copyCommentDto = this.findOne(id);
+        copyCommentDto.setContents(commentDto.getContents());
+        commentRepository.save(copyCommentDto.toEntity());
+    }
 }

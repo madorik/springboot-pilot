@@ -1,41 +1,42 @@
 const comment = {
     init() {
         const self = this
+        let page = 1;
         $("#btn-comment").on("click", e => {
             self.saveComment();
         });
 
         setTimeout(function () {
             self.initSummernote();
-            self.getCommentAll();
+            self.getCommentAll(page);
         }, 1);
 
-        let page = 1;
+
         $(window).scroll(function () {
             if (($(window).scrollTop() + 20) >= ($(document).height() - $(window).height())) {
                 page++;
-                comment.getCommentAll(undefined, page);
+                comment.getCommentAll(page);
             }
         });
     },
 
     initSummernote() {
-        const saveReplyBtn = function (c) {
+        const saveReplyBtn = function () {
             const button = $.summernote.ui.button({
                 contents: '등록',
                 tooltip: "등록",
-                click: function (e) {
+                click: function () {
                     comment.saveComment();
                 },
             });
             return button.render();
         };
 
-        const saveCommentBtn = function (c) {
+        const saveCommentBtn = function () {
             const button = $.summernote.ui.button({
                 contents: '등록',
                 tooltip: "등록",
-                click: function (e) {
+                click: function () {
                     comment.saveReplyByComment();
                 },
             });
@@ -60,7 +61,7 @@ const comment = {
             callbacks: {
                 onImageUpload: function (files) {
                     for (let file of files) {
-                        board.sendFile(file, this, 15);
+                        board.sendFile(file, this, 50);
                     }
                 }
             },
@@ -83,13 +84,13 @@ const comment = {
     },
 
     showCommentDiv(boardId, thread, depth) {
-        const reply = document.getElementById("reply" + boardId);
-        const replyDia = document.getElementById("replyDialog");
-        replyDia.style.display = '';
+        const commentDiv = document.getElementById("comment" + boardId);
+        const dialog = document.getElementById("comment-dialog");
+        dialog.style.display = '';
         $("#hidden-thread").val(thread);
         $("#hidden-depth").val(depth);
         $('#txt-reComment').summernote('reset');
-        reply.appendChild(replyDia);
+        commentDiv.appendChild(dialog);
     },
 
     hiveCommentDiv() {
@@ -98,46 +99,45 @@ const comment = {
         document.body.appendChild(div);
     },
 
-    getCommentAll(boardId, page) {
-        boardId = boardId ? boardId : $("#hidden-id").val();
-        page = page ? page : 1;
-        if (!boardId) return;
-        const userEmail = $('#hidden-email').val();
+    getCommentAll(page) {
+        const boardId = $("#hidden-board-id").val();
         $.ajax({
-            url: '/api/v1/boards/' + boardId + '/comments?page='+page,
+            url: '/api/v1/boards/' + boardId + '/comments?page=' + page,
             type: "GET",
             dataType: "text",
             contentType: "application/json;",
         }).done((data) => {
-            let htmlStr = '';
-            $.each(JSON.parse(data), function (key, value) {
-                htmlStr += '<div id="reply' + value.id + '" style="border-bottom:1px solid darkgray; margin-bottom: 15px; padding-left: ' + (value.depth * 15) + 'px;">';
-                htmlStr += '<p>';
-                if (value.depth > 0) {
-                    htmlStr += '<img src="/img/arrow2.png" width="15"/>';
-                }
-                htmlStr += '<b> ' + value.userEntity.userName + '</b> ' + value.createdDate;
-                htmlStr += '<div style="float: right;">';
-                if (value.deleteYn !== 'Y') {
-                    htmlStr += '<i class="far fa-comment-dots" style="padding-right: 10px" onclick="comment.showCommentDiv(' + value.id + ',' + value.thread + ',' + value.depth + ')"></i>';
-                    if (userEmail === value.userEntity.email) {
-                        htmlStr += '<i class="far fa-edit" style="padding-right: 10px"></i>';
-                        htmlStr += '<i class="far fa-trash-alt" style="padding-right: 10px" onclick="comment.deleteComment(' + boardId + ',' + value.id + ')"></i>';
-                    }
-                }
-                htmlStr += '</div></p>';
-                htmlStr += '<p style="padding-left: ' + (value.depth * 15) + 'px;">';
-                if (value.deleteYn === 'Y') {
-                    htmlStr += '삭제된 댓글입니다.';
-                } else {
-                    htmlStr += value.contents;
-                }
-                htmlStr += '</p>';
-                htmlStr += '</div>';
-            });
-            $("#commentList").append(htmlStr);
+            comment.gridCommentList(data, boardId);
         }).fail(err => {
-            alert(JSON.stringify(err))
+            console.log(JSON.stringify(err))
+        });
+    },
+
+    gridCommentList(data, boardId) {
+        const userEmail = $('#hidden-email').val();
+        let htmlStr = '';
+        $.each(JSON.parse(data), function (key, value) {
+            htmlStr = `<div id="comment${value.id}" style="border-bottom:1px solid darkgray; margin-bottom: 15px; padding-left:${value.depth * 15}px;"><p>`;
+            if (value.depth > 0) {
+                htmlStr += `<img src="/img/arrow2.png" width="15"/>`;
+            }
+            htmlStr += `<b>${value.userEntity.userName}</b>  ${value.createdDate}
+            <div style="float: right;">`;
+            if (value.deleteYn !== 'Y') {
+                htmlStr += `<i class="far fa-comment-dots" style="padding-right: 10px" onclick="comment.showCommentDiv(${value.id}, ${value.thread}, ${value.depth})"></i>`;
+                if (userEmail === value.userEntity.email) {
+                    htmlStr += `<i class="far fa-edit" style="padding-right: 10px" onclick="comment.editReplyByComment(${value.id});"></i>
+                                <i class="far fa-trash-alt" style="padding-right: 10px" onclick="comment.deleteComment(${boardId}, ${value.id})"></i>`;
+                }
+            }
+            htmlStr += `</div></p><p><div id="reply${value.id}" style="padding-bottom: 5px; padding-left: ${value.depth * 15}px;">`;
+            if (value.deleteYn === 'Y') {
+                htmlStr += `삭제된 댓글입니다.`;
+            } else {
+                htmlStr += value.contents;
+            }
+            htmlStr += `</div></p></p>`;
+            $("#commentList").append(htmlStr);
         });
     },
 
@@ -146,7 +146,6 @@ const comment = {
         const data = {
             boardId: id,
             userId: $("#hidden-email").val(),
-            userName: $("#input-author").val(),
             contents: $('#txt-comment').summernote('code')
         }
 
@@ -161,29 +160,29 @@ const comment = {
             alert("댓글이 등록되었습니다.");
             $('#txt-comment').summernote('reset');
             location.reload();
-           /* setTimeout(function () {
-                comment.getCommentAll();
-            }, 1)*/
         }).fail(err => {
             console.log(JSON.stringify(err))
         })
     },
 
     saveReplyByComment() {
-        const id = $("#hidden-id").val();
+        const id = $("#hidden-board-id").val();
         const thread = $("#hidden-thread").val();
         const depth = $("#hidden-depth").val();
+        const commentId = $("#hidden-comment-id").val();
+        const commentApi = '/api/v1/boards/' + id + '/comments';
+        const method = thread ? 'POST' : 'PUT'
+        const url = thread ? commentApi : commentApi + '/' + commentId
         const data = {
-            userId: 'tester',
-            userName: 'tester',
+            userId: $("#hidden-email").val(),
             contents: $('#txt-reComment').summernote('code'),
             thread: parseInt(thread) - 1,
             depth: parseInt(depth) + 1
         }
 
         $.ajax({
-            type: "POST",
-            url: '/api/v1/boards/' + id + '/comments/reply',
+            type: method,
+            url: url,
             dataType: "text",
             contentType: "application/json;",
             data: JSON.stringify(data),
@@ -192,13 +191,20 @@ const comment = {
             alert("댓글이 등록되었습니다.")
             $('#txt-reComment').summernote('reset');
             location.reload();
-            /*setTimeout(function () {
-                comment.hiveCommentDiv();
-                comment.getCommentAll();
-            }, 1);*/
         }).fail(err => {
             console.log(JSON.stringify(err))
         })
+    },
+
+    editReplyByComment(commentId) {
+        const replyDiv = $("#reply" + commentId);
+        const commentDiv = document.getElementById("comment" + commentId);
+        const dialog = document.getElementById("comment-dialog");
+        $('#txt-reComment').summernote('code', replyDiv.html());
+        replyDiv.html('');
+        dialog.style.display = '';
+        $("#hidden-comment-id").val(commentId);
+        commentDiv.appendChild(dialog);
     },
 
     deleteComment(boardId, commentId) {
@@ -207,7 +213,7 @@ const comment = {
         }
 
         $.ajax({
-            type: 'PUT',
+            type: 'PATCH',
             url: '/api/v1/boards/' + boardId + '/comments/' + commentId,
             dataType: "text",
             contentType: "application/json;",
@@ -215,9 +221,6 @@ const comment = {
         }).done(() => {
             alert("댓글이 삭제되었습니다.");
             location.reload();
-           /* setTimeout(function () {
-                comment.getCommentAll(boardId);
-            }, 1);*/
         }).fail(err => {
             console.log(JSON.stringify(err))
         })

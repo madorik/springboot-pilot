@@ -60,13 +60,26 @@ public class CommentRestController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+
     /**
-     * 코멘트 삭제(실제로는 삭제하지 않고 DELETE_YN 여부만 체크)
-     * @param id
+     * 코멘트 수정
+     * @param id : commentId
      * @return
      * @throws BoardNotFoundException
      */
     @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable("id") Long id, @RequestBody CommentDto commentDto) throws BoardNotFoundException {
+        commentService.saveComment(id, commentDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    /**
+     * 코멘트 삭제(실제로는 삭제하지 않고 DELETE_YN 여부만 체크)
+     * @param id : commentId
+     * @return
+     * @throws BoardNotFoundException
+     */
+    @PatchMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) throws BoardNotFoundException {
         commentService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

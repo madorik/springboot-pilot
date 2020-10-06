@@ -80,7 +80,7 @@ const board = {
     },
 
     saveReply() {
-        const id = $("#hidden-id").val();
+        const id = $("#hidden-board-id").val();
         const thread = $("#hidden-thread").val();
         const depth = $("#hidden-depth").val();
         const data = {
