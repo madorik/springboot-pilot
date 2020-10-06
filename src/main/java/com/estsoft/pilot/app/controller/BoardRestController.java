@@ -48,7 +48,7 @@ public class BoardRestController {
      * @param boardDto
      * @return
      */
-    @PatchMapping(value = "/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<Void> edit(@PathVariable("id") Long id, @RequestBody BoardDto boardDto) throws BoardNotFoundException {
         boardService.edit(id, boardDto);
         return ResponseEntity.status(HttpStatus.OK).build();

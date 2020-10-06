@@ -213,7 +213,7 @@ const comment = {
         }
 
         $.ajax({
-            type: 'PATCH',
+            type: 'DELETE',
             url: '/api/v1/boards/' + boardId + '/comments/' + commentId,
             dataType: "text",
             contentType: "application/json;",

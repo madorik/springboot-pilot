@@ -79,7 +79,7 @@ public class CommentRestController {
      * @return
      * @throws BoardNotFoundException
      */
-    @PatchMapping("/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) throws BoardNotFoundException {
         commentService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
