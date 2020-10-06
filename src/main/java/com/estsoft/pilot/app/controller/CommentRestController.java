@@ -67,7 +67,7 @@ public class CommentRestController {
      * @return
      * @throws BoardNotFoundException
      */
-    @PutMapping("/{id}")
+    @PutMapping("/reply/{id}")
     public ResponseEntity<Void> update(@PathVariable("id") Long id, @RequestBody CommentDto commentDto) throws BoardNotFoundException {
         commentService.saveComment(id, commentDto);
         return ResponseEntity.status(HttpStatus.OK).build();
