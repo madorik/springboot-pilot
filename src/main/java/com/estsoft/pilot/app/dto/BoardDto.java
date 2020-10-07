@@ -23,6 +23,7 @@ public class BoardDto {
     private UserEntity userEntity;
     private String subject;
     private String contents;
+    private String deleteYn;
     private List<CommentEntity> commentEntities;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
@@ -40,6 +41,7 @@ public class BoardDto {
                 .userEntity(userDto.toEntity())
                 .subject(subject)
                 .contents(contents)
+                .deleteYn(deleteYn)
                 .commentEntities(commentEntities)
                 .build();
 
@@ -47,7 +49,7 @@ public class BoardDto {
     }
 
     @Builder
-    public BoardDto(Long id, Long thread, int depth, UserEntity userEntity, String userName, String subject,
+    public BoardDto(Long id, Long thread, int depth, UserEntity userEntity, String subject, String deleteYn,
                     String contents, List<CommentEntity> commentEntities, LocalDateTime createdDate, LocalDateTime modifiedDate) {
         this.id = id;
         this.thread = thread;
@@ -55,6 +57,7 @@ public class BoardDto {
         this.userEntity = userEntity;
         this.subject = subject;
         this.contents = contents;
+        this.deleteYn = deleteYn;
         this.commentEntities = commentEntities;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;

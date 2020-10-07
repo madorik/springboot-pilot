@@ -29,7 +29,7 @@ public class BoardRestController {
     public ResponseEntity<BoardDto> detail(@PathVariable("id") Long id) throws BoardNotFoundException {
         log.info("boards detail");
         BoardDto boardDto = boardService.findOne(id);
-        return new ResponseEntity<BoardDto>(boardDto, HttpStatus.OK);
+        return new ResponseEntity<>(boardDto, HttpStatus.OK);
     }
 
     /**
@@ -60,20 +60,18 @@ public class BoardRestController {
      * @return
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        boardService.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) throws BoardNotFoundException {
+        boardService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     /**
      * 답글 등록
-     * @param id
      * @param boardDto
      * @return
-     * @throws BoardNotFoundException
      */
     @PostMapping("/{id}/reply")
-    public ResponseEntity<Void> reply(@PathVariable("id") Long id, @RequestBody BoardDto boardDto) {
+    public ResponseEntity<Void> reply(@RequestBody BoardDto boardDto) {
         boardService.saveBoardReply(boardDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

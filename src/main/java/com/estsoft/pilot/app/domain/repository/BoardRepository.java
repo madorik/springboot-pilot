@@ -40,7 +40,7 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
                     "SELECT * " +
                     "FROM board  " +
                     "WHERE subject LIKE %?1% " +
-                    "ORDER BY board_id desc " +
+                    "AND delete_yn = 'N' " +
                     ") b1 " +
                     "JOIN board b2 " +
                     "ON (b1.board_id = b2.board_id) " +
@@ -48,4 +48,8 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
             , countQuery = "SELECT COUNT(b.board_id) FROM board b WHERE b.subject LIKE %?1%"
     )
     Page<BoardEntity> findBySubject(@Param("subject") String subject, @Param("pageable") Pageable pageable);
+
+    @Modifying
+    @Query("UPDATE BoardEntity b SET b.deleteYn = 'Y' WHERE b.thread <= :thread  AND b.thread > :prevThread")
+    void deleteByThreadRange(Long thread, Long prevThread);
 }

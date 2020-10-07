@@ -20,7 +20,7 @@ import java.util.Optional;
 @Transactional
 public class BoardService {
 
-    private BoardRepository boardRepository;
+    private final BoardRepository boardRepository;
 
     private static final int PAGE_POST_COUNT = 20;
 
@@ -32,6 +32,7 @@ public class BoardService {
                 .userEntity(boardEntity.getUserEntity())
                 .subject(boardEntity.getSubject())
                 .contents(boardEntity.getContents())
+                .deleteYn(boardEntity.getDeleteYn())
                 .commentEntities(boardEntity.getCommentEntities())
                 .createdDate(boardEntity.getCreatedDate())
                 .modifiedDate(boardEntity.getModifiedDate())
@@ -62,15 +63,30 @@ public class BoardService {
         return boardRepository.save(boardDto.toEntity()).getId();
     }
 
-    public void delete(Long id) {
-        boardRepository.deleteById(id);
+    /**
+     * 원글 thread 및 자식 답글의 삭제여부를 Y로 업데이트
+     * @param id
+     * @throws BoardNotFoundException
+     */
+    public void deleteById(Long id) throws BoardNotFoundException {
+        BoardDto boardDto = this.findOne(id);
+        int depth = boardDto.getDepth();
+        if (depth == 0) {
+            // 원글일 경우 자식 답글까지 업데이트
+            Long thread = boardDto.getThread();
+            Long prevThread = boardRepository.findByPrevThread(thread);
+            boardRepository.deleteByThreadRange(thread, prevThread);
+        } else {
+            // 답글일 경우 자신만 업데이트
+            boardDto.setDeleteYn("Y");
+            boardRepository.save(boardDto.toEntity());
+        }
     }
 
     /**
      * 1. 답글을 등록하면 부모글 thread와 이전글 thread 사이의 thread를 -1씩 업데이트한다.
      * 2. 등록되는 댓글의 thread는 client에서 부모 thread의 -1되어 전송되었으므로 그대로 save한다.
      * @param boardDto
-     * @throws BoardNotFoundException
      */
     public void saveBoardReply(BoardDto boardDto) {
         Long thread = boardDto.getThread();

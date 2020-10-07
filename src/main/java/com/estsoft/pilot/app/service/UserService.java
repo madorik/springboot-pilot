@@ -25,8 +25,10 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class UserService implements UserDetailsService {
-    private UserRepository userRepository;
-    private PilotProperties pilotProperties;
+
+    private final UserRepository userRepository;
+
+    private final PilotProperties pilotProperties;
 
     private UserDto convertEntityToDto(UserEntity userEntity) {
         return UserDto.builder()
