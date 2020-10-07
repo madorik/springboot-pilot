@@ -101,6 +101,7 @@ const comment = {
 
     getCommentAll(page) {
         const boardId = $("#hidden-board-id").val();
+        if (!boardId) return;
         $.ajax({
             url: '/api/v1/boards/' + boardId + '/comments?page=' + page,
             type: "GET",
@@ -114,6 +115,7 @@ const comment = {
     },
 
     gridCommentList(data, boardId) {
+        console.log("gridCommentList>>", boardId);
         const userEmail = $('#hidden-email').val();
         let htmlStr = '';
         $.each(JSON.parse(data), function (key, value) {
