@@ -94,7 +94,7 @@ const comment = {
     },
 
     hiveCommentDiv() {
-        const div = document.getElementById('replyDialog');
+        const div = document.getElementById('comment-dialog');
         div.style.display = 'none';
         document.body.appendChild(div);
     },

@@ -32,6 +32,7 @@ dependencies {
     /*compile group: 'org.webjars', name: 'summernote', version: '0.8.10'*/
     compile group: 'org.webjars.npm', name: 'summernote', version: '0.8.18'
 
+    compile group: 'com.google.guava', name: 'guava', version: '11.0.2'
 
     compile group: 'org.webjars', name: 'Semantic-UI', version: '2.4.1'
     compile group: 'org.webjars', name: 'font-awesome', version: '5.14.0'

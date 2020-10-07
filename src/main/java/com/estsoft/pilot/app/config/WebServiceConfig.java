@@ -1,5 +1,7 @@
 package com.estsoft.pilot.app.config;
 
+import com.estsoft.pilot.app.config.auth.BoardAuthInterceptor;
+import com.estsoft.pilot.app.config.auth.CommentAuthInterceptor;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

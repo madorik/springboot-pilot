@@ -1,5 +1,6 @@
 package com.estsoft.pilot.app.config;
 
+import com.estsoft.pilot.app.config.auth.LoginFailureHandler;
 import com.estsoft.pilot.app.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;

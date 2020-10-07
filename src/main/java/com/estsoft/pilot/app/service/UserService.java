@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,10 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
 
     private final PilotProperties pilotProperties;
+
+    private final LoginAttemptService loginAttemptService;
+
+    private final HttpServletRequest request;
 
     private UserDto convertEntityToDto(UserEntity userEntity) {
         return UserDto.builder()
@@ -46,6 +51,11 @@ public class UserService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        String ip = getClientIP();
+        if (loginAttemptService.isBlocked(ip)) {
+            throw new RuntimeException("blocked");
+        }
+
         Optional<UserEntity> optUserEntity = userRepository.findByEmail(email);
         if (!optUserEntity.isPresent()) {
             throw new UsernameNotFoundException("User not found with this email : " + email);
@@ -86,6 +96,18 @@ public class UserService implements UserDetailsService {
     @Transactional
     public int checkInvalidEmail(String email) {
         return userRepository.countByEmail(email);
+    }
+
+    /**
+     * Request IP 확인
+     * @return 요청 IP
+     */
+    private String getClientIP() {
+        String xfHeader = request.getHeader("X-Forwarded-For");
+        if (xfHeader == null) {
+            return request.getRemoteAddr();
+        }
+        return xfHeader.split(",")[0];
     }
 
 }

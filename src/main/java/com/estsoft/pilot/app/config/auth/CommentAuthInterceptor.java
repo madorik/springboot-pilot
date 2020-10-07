@@ -1,4 +1,4 @@
-package com.estsoft.pilot.app.config;
+package com.estsoft.pilot.app.config.auth;
 
 import com.estsoft.pilot.app.domain.repository.CommentRepository;
 import lombok.AllArgsConstructor;
