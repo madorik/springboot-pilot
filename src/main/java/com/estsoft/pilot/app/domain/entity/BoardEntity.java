@@ -32,7 +32,7 @@ public class BoardEntity extends BaseTimeEntity {
     @ColumnDefault("0")
     private int depth;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 

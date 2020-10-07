@@ -1,10 +1,7 @@
 package com.estsoft.pilot.app.domain.entity;
 
 import com.estsoft.pilot.app.domain.BaseTimeEntity;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 

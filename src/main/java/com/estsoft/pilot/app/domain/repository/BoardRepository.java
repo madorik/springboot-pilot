@@ -34,9 +34,17 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     @Override
     Optional<BoardEntity> findById(@Param("id") Long id);
 
-    @Query(
-            value = "SELECT b FROM BoardEntity b JOIN FETCH b.userEntity WHERE b.subject LIKE %:subject%",
-            countQuery = "SELECT COUNT(b.id) FROM BoardEntity b WHERE b.subject LIKE %:subject%"
+    @Query(nativeQuery = true,
+            value = "SELECT b1.* " +
+                    "FROM ( " +
+                    "SELECT * " +
+                    "FROM board  " +
+                    "WHERE subject LIKE %?1% " +
+                    "ORDER BY thread DESC, depth DESC " +
+                    ") b1 " +
+                    "JOIN board b2 " +
+                    "ON (b1.board_id = b2.board_id) "
+            , countQuery = "SELECT COUNT(b.board_id) FROM board b WHERE b.subject LIKE %?1%"
     )
     Page<BoardEntity> findBySubject(@Param("subject") String subject, @Param("pageable") Pageable pageable);
 }
