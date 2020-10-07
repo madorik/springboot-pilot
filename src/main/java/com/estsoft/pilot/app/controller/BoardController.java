@@ -27,6 +27,7 @@ public class BoardController {
 
         Page<BoardDto> boardList = boardService.findAllBySubject(pageNum, subject);
         model.addAttribute("boardList", boardList);
+        model.addAttribute("subject", subject);
         return "board/board-list";
     }
 

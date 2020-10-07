@@ -14,7 +14,7 @@
                    th:value="${boardDto.subject}" readonly>
 
             <input type="text" class="form-control" id="input-subject" th:if="${boardDto.userEntity.email eq #authentication.principal.email}"
-                   th:value="${boardDto.subject}">
+                   th:value="${boardDto.subject}" maxlength="100">
         </div>
 
         <div class="form-group">
