@@ -2,6 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="fragments/common :: common"></th:block>
+    <script th:src="@{/js/user.js}"></script>
 </head>
 <body class="ui grid">
 <div class="ui container eleven wide column main-container" style="padding: 50px 0">
@@ -30,6 +31,5 @@
         </div>
     </form>
 </div>
-<div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

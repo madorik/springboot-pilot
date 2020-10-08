@@ -7,7 +7,7 @@
 <div class="ui container eleven wide column main-container" style="padding: 50px 0">
     <div th:replace="fragments/header :: header"></div>
     <h1>답글달기</h1>
-    <form>
+    <form id="form-post-reply">
         <input type="hidden" id="hidden-board-id" th:value="${boardDto.id}">
         <input type="hidden" id="hidden-thread" th:value="${boardDto.thread}">
         <input type="hidden" id="hidden-depth" th:value="${boardDto.depth}">

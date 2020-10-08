@@ -14,13 +14,13 @@
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 <span class="login100-form-title p-b-33">Login</span>
                 <div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
-                    <input class="input100" type="email" name="username" placeholder="Email">
+                    <input class="input100" type="email" name="username" placeholder="Email" minlength="5" maxlength="50" required>
                     <span class="focus-input100-1"></span>
                     <span class="focus-input100-2"></span>
                 </div>
 
                 <div class="wrap-input100 rs1 validate-input" data-validate="Password is required">
-                    <input class="input100" type="password" name="password" placeholder="Password">
+                    <input class="input100" type="password" name="password" placeholder="Password" minlength="8" maxlength="15"required>
                     <span class="focus-input100-1"></span>
                     <span class="focus-input100-2"></span>
                 </div>

@@ -1,17 +1,19 @@
 package com.estsoft.pilot.app.config.auth;
 
 import com.estsoft.pilot.app.service.LoginAttemptService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.stereotype.Component;
 
 /**
  * Create by madorik on 2020-10-07
  */
+@Component
+@AllArgsConstructor
 public class AuthenticationSuccessEventListener implements ApplicationListener<AuthenticationSuccessEvent> {
 
-    @Autowired
     private LoginAttemptService loginAttemptService;
 
     public void onApplicationEvent(AuthenticationSuccessEvent e) {

@@ -59,6 +59,11 @@ const board = {
     },
 
     savePost() {
+        const valid = $("#form-post-save")[0].checkValidity();
+        if (!valid) {
+            alert("제목과 내용은 필수 입력 항목입니다.");
+            return;
+        }
         const data = {
             subject: $("#input-subject").val(),
             contents: $('#txt-content').summernote('code')
@@ -80,6 +85,11 @@ const board = {
     },
 
     saveReply() {
+        const valid = $("#form-post-reply")[0].checkValidity();
+        if (!valid) {
+            alert("제목과 내용은 필수 입력 항목입니다.");
+            return;
+        }
         const id = $("#hidden-board-id").val();
         const thread = $("#hidden-thread").val();
         const depth = $("#hidden-depth").val();
@@ -91,7 +101,6 @@ const board = {
             depth: parseInt(depth) + 1
         }
 
-        console.log(data)
         $.ajax({
             type: "POST",
             url: '/api/v1/boards/' + id + '/reply',

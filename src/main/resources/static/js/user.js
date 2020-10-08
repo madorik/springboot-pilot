@@ -10,18 +10,13 @@ const user = {
 
         $("#password").on("input", e => {
             self.checkInvalidPassword();
-        })
+        });
 
         $("#confirm-password").on("input", e => {
             self.checkInvalidPassword();
-        })
+        });
     },
-    setUser() {
-        sessionStorage.setItem("user", $("#hidden-principal").val());
-    },
-    getUser() {
-        sessionStorage.getItem("user");
-    },
+
     checkInvalidEmail() {
         const token = $("input[name='_csrf']").val();
         const email = $('#sign-email').val();

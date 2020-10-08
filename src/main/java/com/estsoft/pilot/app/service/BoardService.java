@@ -7,6 +7,7 @@ import com.estsoft.pilot.app.dto.BoardDto;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,7 +56,8 @@ public class BoardService {
      */
     @Transactional(readOnly = true)
     public Page<BoardDto> findAllBySubject(Integer pageNum, String subject) {
-        Page<BoardEntity> page = boardRepository.findBySubject(subject, PageRequest.of(pageNum - 1, PAGE_POST_COUNT));
+        Page<BoardEntity> page = boardRepository.findBySubject(subject, PageRequest.of(pageNum - 1, PAGE_POST_COUNT,
+                Sort.by("thread").descending().and(Sort.by("depth").descending())));
         return page.map(this::convertEntityToDto);
     }
 
@@ -91,7 +93,7 @@ public class BoardService {
     public void saveBoardReply(BoardDto boardDto) {
         Long thread = boardDto.getThread();
         Long prevThread = boardRepository.findByPrevThread(thread);
-        boardRepository.updateBoardByThread(thread + 1, prevThread);
+        boardRepository.updateBoardByThread(thread, prevThread);
         boardRepository.save(boardDto.toEntity()).getId();
     }
 

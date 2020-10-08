@@ -21,7 +21,7 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     Long findByPrevThread(@Param("thread") Long thread);
 
     @Modifying
-    @Query("UPDATE BoardEntity b SET b.thread = b.thread - 1 WHERE b.thread < :thread  AND b.thread > :prevThread")
+    @Query("UPDATE BoardEntity b SET b.thread = b.thread - 1 WHERE b.thread <= :thread  AND b.thread > :prevThread")
     void updateBoardByThread(@Param("thread") Long thread, @Param("prevThread") Long prevThread);
 
     void deleteById(@Param("id") Long id);
@@ -34,19 +34,8 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     @Override
     Optional<BoardEntity> findById(@Param("id") Long id);
 
-    @Query(nativeQuery = true,
-            value = "SELECT b1.* " +
-                    "FROM ( " +
-                    "SELECT * " +
-                    "FROM board  " +
-                    "WHERE subject LIKE %?1% " +
-                    "AND delete_yn = 'N' " +
-                    ") b1 " +
-                    "JOIN board b2 " +
-                    "ON (b1.board_id = b2.board_id) " +
-                    "ORDER BY b1.thread desc, b1.depth desc "
-            , countQuery = "SELECT COUNT(b.board_id) FROM board b WHERE b.subject LIKE %?1%"
-    )
+    @Query(value = "SELECT b FROM BoardEntity b JOIN FETCH b.userEntity WHERE b.subject LIKE %:subject%"
+        , countQuery = "SELECT COUNT(b.id) FROM BoardEntity b WHERE b.subject LIKE %:subject%")
     Page<BoardEntity> findBySubject(@Param("subject") String subject, @Param("pageable") Pageable pageable);
 
     @Modifying
