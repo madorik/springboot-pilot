@@ -49,6 +49,12 @@ public class CommentService {
         return this.convertEntityToDto(commentEntityWrapper.get());
     }
 
+    /**
+     * 게시글의 코멘트 조회
+     * @param boardDto
+     * @param pageNum
+     * @return
+     */
     public Page<CommentDto> findByBoard(BoardDto boardDto, Integer pageNum) {
         Page<CommentEntity> page = commentRepository.findAllByBoardEntity(boardDto.toEntity(), PageRequest.of(pageNum - 1, PAGE_POST_COUNT,
                 Sort.by("thread").descending().and(Sort.by("depth").descending())));

@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.test.annotation.Commit;
 
 import java.util.Arrays;
@@ -59,11 +58,11 @@ public class CommentRepositoryTest {
 
     @Test
     public void findByBoardId() {
-        BoardDto boardDto = new BoardDto();
+       /* BoardDto boardDto = new BoardDto();
         boardDto.setId(8L);
 
         Page<CommentDto> commentDtos = commentService.findByBoard(boardDto, 2);
-        logger.info(commentDtos.toString());
+        logger.info(commentDtos.toString());*/
 
     }
 }

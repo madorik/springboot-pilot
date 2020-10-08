@@ -10,23 +10,41 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-
 public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
 
-    @Query("SELECT c FROM CommentEntity c JOIN FETCH c.boardEntity JOIN FETCH c.userEntity  WHERE c.boardEntity = ?1 ORDER BY c.thread DESC")
-    List<CommentEntity> findByBoard(@Param("boardEntity") BoardEntity boardEntity);
+    /**
+     * 새 코멘트 추가시에 설정할 thread 조회
+     * @param boardId
+     * @return 마지막 thread + 1000
+     */
+    @Query("SELECT COALESCE(MAX(c.thread), 0) + 1000 FROM CommentEntity c WHERE c.boardEntity.id = :boardId")
+    Long findMaxCommentThreadByBoardId(@Param("boardId") Long boardId);
 
+    /**
+     * 현재 게시글의 이전 코멘트 thread number 조회
+     * @param thread
+     * @param boardId
+     * @return
+     */
     @Query(nativeQuery = true, value = "SELECT COALESCE(MAX(c.thread), 0) FROM comment c WHERE c.depth = 0 AND c.thread < ?1 AND c.board_id = ?2 ORDER BY c.thread DESC LIMIT 1")
     Long findByPrevCommentThread(@Param("thread") Long thread, @Param("boardId") Long boardId);
 
+    /**
+     * 코멘트에 달린 thread number 업데이트
+     * @param thread
+     * @param prevThread
+     * @param boardEntity
+     */
     @Modifying
     @Query("UPDATE CommentEntity c SET c.thread = c.thread - 1 WHERE c.thread < :thread  AND c.thread > :prevThread AND c.boardEntity = :boardEntity")
     void updateCommentByThread(@Param("thread") Long thread, @Param("prevThread") Long prevThread, @Param("boardEntity") BoardEntity boardEntity);
 
-    @Query("SELECT COALESCE(MAX(c.thread), 0) + 1000 FROM CommentEntity c WHERE c.boardEntity.id = :boardId")
-    Long findMaxCommentThreadByBoardId(@Param("boardId") Long boardId);
-
+    /**
+     * 상세 게시글에 추가된 코멘트 조회
+     * @param boardEntity
+     * @param pageable
+     * @return
+     */
     @EntityGraph(value = "comment-with-all", type = EntityGraph.EntityGraphType.FETCH)
     Page<CommentEntity> findAllByBoardEntity(BoardEntity boardEntity, Pageable pageable);
 }
