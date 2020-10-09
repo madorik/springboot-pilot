@@ -27,7 +27,7 @@ public class CommentRestController {
     /**
      * 상세 게시글에 포함되어 있는 comment 목록을 보여준다.
      * @param id : board_id
-     * @return
+     * @return ResponseEntity<List<CommentDto>>
      */
     @GetMapping
     public ResponseEntity<List<CommentDto>> reply(@PathVariable("id") Long id, @RequestParam(value = "page", defaultValue = "1") Integer pageNum) {
@@ -38,8 +38,8 @@ public class CommentRestController {
     /**
      * 상세 게시글에 comment를 추가한다.
      * @param id : board_id
-     * @param commentDto
-     * @return
+     * @param commentDto commentDto
+     * @return ResponseEntity<Void>
      */
     @PostMapping
     public ResponseEntity<Void> save(@PathVariable("id") Long id, @RequestBody CommentDto commentDto) {
@@ -50,9 +50,8 @@ public class CommentRestController {
     /**
      * 상세 게시글에 달린 comment에 댓글을 추가한다.
      * @param id : board_id
-     * @param commentDto
-     * @return
-     * @throws BoardRestController.BoardNotFoundException
+     * @param commentDto commentDto
+     * @return ResponseEntity<Void>
      */
     @PostMapping("/reply")
     public ResponseEntity<Void> reply(@PathVariable("id") Long id, @RequestBody CommentDto commentDto) {
@@ -60,12 +59,11 @@ public class CommentRestController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-
     /**
      * 코멘트 수정
      * @param id : commentId
-     * @return
-     * @throws BoardNotFoundException
+     * @return ResponseEntity<Void>
+     * @throws BoardNotFoundException BoardNotFoundException
      */
     @PutMapping("/reply/{id}")
     public ResponseEntity<Void> update(@PathVariable("id") Long id, @RequestBody CommentDto commentDto) throws BoardNotFoundException {
@@ -76,8 +74,8 @@ public class CommentRestController {
     /**
      * 코멘트 삭제(실제로는 삭제하지 않고 DELETE_YN 여부만 체크)
      * @param id : commentId
-     * @return
-     * @throws BoardNotFoundException
+     * @return ResponseEntity<Void>
+     * @throws BoardNotFoundException BoardNotFoundException
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) throws BoardNotFoundException {

@@ -23,16 +23,16 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
 
     /**
      * 이전 게시글의 thread number 조회
-     * @param thread
-     * @return
+     * @param thread thread
+     * @return id
      */
     @Query(nativeQuery = true, value = "SELECT COALESCE(MAX(b.thread), 0) FROM board b WHERE b.depth = 0 AND b.thread < ? ORDER BY b.thread DESC LIMIT 1")
     Long findByPrevThread(@Param("thread") Long thread);
 
     /**
      * 게시글에 달린 답변 thread number 업데이트
-     * @param thread
-     * @param prevThread
+     * @param thread thread
+     * @param prevThread prevThread
      */
     @Modifying
     @Query("UPDATE BoardEntity b SET b.thread = b.thread - 1 WHERE b.thread <= :thread  AND b.thread > :prevThread")
@@ -40,8 +40,8 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
 
     /**
      * 게시글 상세조회
-     * @param id
-     * @return
+     * @param id id
+     * @return Optional<BoardEntity>
      */
     @EntityGraph(value = "board-with-user", type = EntityGraphType.FETCH)
     @Override
@@ -49,9 +49,9 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
 
     /**
      * 게시글 페이징 조회
-     * @param subject
-     * @param pageable
-     * @return
+     * @param subject subject
+     * @param pageable pageable
+     * @return Page<BoardEntity>
      */
     @Query(value = "SELECT b FROM BoardEntity b JOIN FETCH b.userEntity WHERE b.subject LIKE %:subject% AND b.deleteYn = 'N'"
         , countQuery = "SELECT COUNT(b.id) FROM BoardEntity b WHERE b.subject LIKE %:subject% AND b.deleteYn = 'N'")
@@ -59,8 +59,8 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
 
     /**
      * 원글 삭제여부 업데이트
-     * @param thread
-     * @param prevThread
+     * @param thread thread
+     * @param prevThread prevThread
      */
     @Modifying
     @Query("UPDATE BoardEntity b SET b.deleteYn = 'Y' WHERE b.thread <= :thread  AND b.thread > :prevThread")

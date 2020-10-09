@@ -5,6 +5,7 @@ import com.estsoft.pilot.app.domain.entity.FileEntity;
 import com.estsoft.pilot.app.domain.repository.FileRepository;
 import com.estsoft.pilot.app.dto.FileDto;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,12 +22,15 @@ import java.util.UUID;
 /**
  * Create by madorik on 2020-09-28
  */
+@Slf4j
 @AllArgsConstructor
 @Service
 @Transactional
 public class FileService {
-    private PilotProperties pilotProperties;
-    private FileRepository fileRepository;
+
+    private final PilotProperties pilotProperties;
+
+    private final FileRepository fileRepository;
 
     private FileDto convertEntityToDto(FileEntity fileEntity) {
         return FileDto.builder()
@@ -48,9 +52,9 @@ public class FileService {
      * contentType : image/jpeg
      * size : 4994942
      *
-     * @param file
-     * @return
-     * @throws Exception
+     * @param file file
+     * @return FileEntity
+     * @throws IOException IOException
      */
     public FileEntity store(MultipartFile file) throws IOException {
         try {
@@ -65,7 +69,6 @@ public class FileService {
             fileDto.setContentType(file.getContentType());
             fileDto.setSize(file.getResource().contentLength());
             fileDto.setFilePath(rootLocation.toString().replace(File.separatorChar, '/') + '/' + saveFileName);
-            fileRepository.save(fileDto.toEntity());
             return fileRepository.save(fileDto.toEntity());
 
         } catch (IOException e) {
@@ -75,15 +78,16 @@ public class FileService {
 
     /**
      * random uuid를 생성하여 원본 파일명과 혼합하여 리턴
-     * @param rootLocation
-     * @param file
+     * @param rootLocation rootLocation
+     * @param file file
      * @return saveFileName
-     * @throws IOException
+     * @throws IOException IOException
      */
     public String fileSave(String rootLocation, MultipartFile file) throws IOException {
         File uploadDir = new File(rootLocation);
         if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
+            boolean mkdirs = uploadDir.mkdirs();
+            log.info("make dir : {}", mkdirs);
         }
 
         UUID uuid = UUID.randomUUID();
@@ -96,13 +100,13 @@ public class FileService {
 
     /**
      * 이미지 가져오기
-     * @param id
+     * @param id id
      * @return FileDto
-     * @throws Exception
+     * @throws Exception Exception
      */
     public FileDto findById(Long id) throws Exception {
         Optional<FileEntity> fileEntityWrapper = fileRepository.findById(id);
-        if (!fileEntityWrapper.isPresent()) {
+        if (fileEntityWrapper.isEmpty()) {
             throw new Exception("Not found file.");
         }
         return this.convertEntityToDto(fileEntityWrapper.get());

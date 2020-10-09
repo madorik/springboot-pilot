@@ -3,6 +3,7 @@ package com.estsoft.pilot.app.service;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
@@ -11,17 +12,16 @@ import java.util.concurrent.TimeUnit;
 /**
  * Create by madorik on 2020-10-07
  */
+@Slf4j
 @Service
 public class LoginAttemptService {
 
-    private final int MAX_ATTEMPT = 5;
-
-    private LoadingCache<String, Integer> attemptsCache;
+    private final LoadingCache<String, Integer> attemptsCache;
 
     public LoginAttemptService() {
         super();
         attemptsCache = CacheBuilder.newBuilder().
-                expireAfterWrite(1, TimeUnit.HOURS).build(new CacheLoader<String, Integer>() {
+                expireAfterWrite(1, TimeUnit.HOURS).build(new CacheLoader<>() {
             public Integer load(String key) {
                 return 0;
             }
@@ -33,19 +33,20 @@ public class LoginAttemptService {
     }
 
     public void loginFailed(String remoteAddress) {
-        int attempts = 0;
+        int attemptCount = 0;
         try {
-            attempts = attemptsCache.get(remoteAddress);
+            attemptCount = attemptsCache.get(remoteAddress);
         } catch (Exception e) {
-            attempts = 0;
+            log.error("loginFailed {}", e);
         }
-        attempts++;
-        attemptsCache.put(remoteAddress, attempts);
+        attemptCount++;
+        attemptsCache.put(remoteAddress, attemptCount);
     }
 
     public boolean isBlocked(String remoteAddress) {
         try {
-            return attemptsCache.get(remoteAddress) >= MAX_ATTEMPT;
+            int maxAttemptCount = 5;
+            return attemptsCache.get(remoteAddress) >= maxAttemptCount;
         } catch (Exception e) {
             return false;
         }

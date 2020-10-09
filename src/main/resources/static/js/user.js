@@ -4,15 +4,15 @@ const VALID_COLOR = "#5CD1E5";
 const user = {
     init() {
         const self = this
-        $("#sign-email").on("input", e => {
+        $("#sign-email").on("input", () => {
             self.checkInvalidEmail();
         });
 
-        $("#password").on("input", e => {
+        $("#password").on("input", () => {
             self.checkInvalidPassword();
         });
 
-        $("#confirm-password").on("input", e => {
+        $("#confirm-password").on("input", () => {
             self.checkInvalidPassword();
         });
     },
@@ -45,8 +45,8 @@ const user = {
     },
     checkInvalidPassword() {
         const regExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,15}$/;
-        let password = $('#password').val();
-        let confirmPassword = $('#confirm-password').val();
+        const password = $('#password').val();
+        const confirmPassword = $('#confirm-password').val();
 
         if (regExp.test(password)) {
             $("#password").css("border-color", VALID_COLOR);

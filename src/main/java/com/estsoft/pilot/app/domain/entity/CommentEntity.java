@@ -39,7 +39,7 @@ public class CommentEntity extends BaseTimeEntity {
     private Long thread;
 
     @ColumnDefault("0")
-    private int depth;
+    private Integer depth;
 
     @Column(length = 200, nullable = false)
     private String contents;
@@ -55,15 +55,6 @@ public class CommentEntity extends BaseTimeEntity {
         this.userEntity = userEntity;
         this.depth = depth;
         this.contents = contents;
-        this.deleteYn = deleteYn;
-    }
-
-    public void update(String contents, String deleteYn) {
-        this.contents = contents;
-        this.deleteYn = deleteYn;
-    }
-
-    public void delete(String deleteYn) {
         this.deleteYn = deleteYn;
     }
 }

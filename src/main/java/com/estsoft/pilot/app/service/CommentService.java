@@ -23,7 +23,7 @@ import java.util.Optional;
 @Transactional
 public class CommentService {
 
-    private CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
 
     private static final int PAGE_POST_COUNT = 20;
 
@@ -43,7 +43,7 @@ public class CommentService {
 
     public CommentDto findOne(Long id) throws BoardNotFoundException {
         Optional<CommentEntity> commentEntityWrapper = commentRepository.findById(id);
-        if (!commentEntityWrapper.isPresent()) {
+        if (commentEntityWrapper.isEmpty()) {
             throw new BoardRestController.BoardNotFoundException();
         }
         return this.convertEntityToDto(commentEntityWrapper.get());
@@ -51,21 +51,23 @@ public class CommentService {
 
     /**
      * 게시글의 코멘트 조회
-     * @param boardDto
-     * @param pageNum
-     * @return
+     *
+     * @param boardDto boardDto
+     * @param pageNum pageNum
+     * @return Page<CommentDto>
      */
     public Page<CommentDto> findByBoard(BoardDto boardDto, Integer pageNum) {
-        Page<CommentEntity> page = commentRepository.findAllByBoardEntity(boardDto.toEntity(), PageRequest.of(pageNum - 1, PAGE_POST_COUNT,
-                Sort.by("thread").descending().and(Sort.by("depth").descending())));
+        Page<CommentEntity> page = commentRepository.findAllByBoardEntity(boardDto.toEntity(),
+                PageRequest.of(pageNum - 1, PAGE_POST_COUNT, Sort.by("thread").descending()));
         return page.map(this::convertEntityToDto);
     }
 
     /**
      * 상세 게시글에 코멘트 추가.
-     * @param commentDto
-     * @param boardId
-     * @return
+     *
+     * @param commentDto commentDto
+     * @param boardId boardId
+     * @return CommentEntity
      */
     public CommentEntity saveAndUpdateComment(CommentDto commentDto, Long boardId) {
         commentDto.setBoardEntity(new BoardDto(boardId).toEntity());
@@ -76,8 +78,9 @@ public class CommentService {
 
     /**
      * 상세 게시글 코멘트에 댓글을 추가한다. (대댓글)
-     * @param id : board_id
-     * @param commentDto
+     *
+     * @param id id         : board_id
+     * @param commentDto commentDto
      */
     public void saveReplyByComment(Long id, CommentDto commentDto) {
         Long thread = commentDto.getThread();
@@ -85,13 +88,14 @@ public class CommentService {
 
         commentDto.setBoardEntity(new BoardDto(id).toEntity());
         commentRepository.updateCommentByThread(thread + 1, prevThread, commentDto.getBoardEntity());
-        commentRepository.save(commentDto.toEntity()).getId();
+        commentRepository.save(commentDto.toEntity());
     }
 
     /**
      * 코멘트 삭제여부 업데이트
-     * @param id
-     * @throws BoardNotFoundException
+     *
+     * @param id id
+     * @throws BoardNotFoundException BoardNotFoundException
      */
     public void deleteById(Long id) throws BoardNotFoundException {
         CommentDto commentDto = this.findOne(id);
@@ -102,8 +106,9 @@ public class CommentService {
 
     /**
      * 코멘트 내용 업데이트
-     * @param id
-     * @throws BoardNotFoundException
+     *
+     * @param id id
+     * @throws BoardNotFoundException BoardNotFoundException
      */
     public void saveComment(Long id, CommentDto commentDto) throws BoardNotFoundException {
         CommentDto copyCommentDto = this.findOne(id);

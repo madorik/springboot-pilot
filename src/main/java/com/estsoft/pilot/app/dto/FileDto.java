@@ -20,7 +20,7 @@ public class FileDto {
     private LocalDateTime modifiedDate;
 
     public FileEntity toEntity() {
-        FileEntity fileEntity = FileEntity.builder()
+        return FileEntity.builder()
                 .id(id)
                 .fileName(fileName)
                 .saveFileName(saveFileName)
@@ -28,7 +28,6 @@ public class FileDto {
                 .contentType(contentType)
                 .size(size)
                 .build();
-        return fileEntity;
     }
 
     @Builder

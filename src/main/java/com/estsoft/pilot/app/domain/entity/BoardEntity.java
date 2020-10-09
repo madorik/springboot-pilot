@@ -28,7 +28,7 @@ public class BoardEntity extends BaseTimeEntity {
     private Long thread;
 
     @ColumnDefault("0")
-    private int depth;
+    private Integer depth;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")

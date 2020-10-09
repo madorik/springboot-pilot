@@ -2,7 +2,7 @@ const comment = {
     init() {
         const self = this
         let page = 1;
-        $("#btn-comment").on("click", e => {
+        $("#btn-comment").on("click", () => {
             self.saveComment();
         });
 
@@ -115,13 +115,12 @@ const comment = {
     },
 
     gridCommentList(data, boardId) {
-        console.log("gridCommentList>>", boardId);
         const userEmail = $('#hidden-email').val();
         let htmlStr = '';
         $.each(JSON.parse(data), function (key, value) {
             htmlStr = `<div id="comment${value.id}" style="border-bottom:1px solid darkgray; margin-bottom: 15px; padding-left:${value.depth * 15}px;"><p>`;
             if (value.depth > 0) {
-                htmlStr += `<img src="/img/arrow2.png" width="15"/>`;
+                htmlStr += `<img src="/img/arrow2.png" width="15" alt="arrow"/>`;
             }
             htmlStr += `<b>${value.userEntity.userName}</b>  ${value.createdDate}
             <div style="float: right;">`;
@@ -211,7 +210,7 @@ const comment = {
 
     deleteComment(boardId, commentId) {
         if (!confirm("이 게시글을 삭제하시겠습니까?")) {
-            return false
+            return false;
         }
 
         $.ajax({

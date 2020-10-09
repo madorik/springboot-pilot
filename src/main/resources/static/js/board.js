@@ -1,19 +1,19 @@
 const board = {
     init() {
         const self = this
-        $("#btn-save").on("click", e => {
+        $("#btn-save").on("click", () => {
             self.savePost();
         });
 
-        $("#btn-reply").on("click", e => {
+        $("#btn-reply").on("click", () => {
             self.saveReply();
-        })
+        });
 
-        $("#btn-update").on("click", e => {
+        $("#btn-update").on("click", () => {
             self.update();
         });
 
-        $("#btn-delete").on("click", e => {
+        $("#btn-delete").on("click", () => {
             self.delete();
         });
 
@@ -54,7 +54,6 @@ const board = {
     },
 
     token() {
-        console.log($("input[name='_csrf']").val())
         return $("input[name='_csrf']").val();
     },
 
@@ -138,10 +137,11 @@ const board = {
             console.log(JSON.stringify(err))
         })
     },
+
     delete() {
-        const id = $("#input-id").val()
+        const id = $("#input-id").val();
         if (!confirm("이 게시글을 삭제하시겠습니까?")) {
-            return false
+            return false;
         }
 
         $.ajax({

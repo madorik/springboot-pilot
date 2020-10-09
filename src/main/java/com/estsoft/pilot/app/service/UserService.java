@@ -5,6 +5,7 @@ import com.estsoft.pilot.app.domain.entity.Role;
 import com.estsoft.pilot.app.domain.entity.UserEntity;
 import com.estsoft.pilot.app.domain.repository.UserRepository;
 import com.estsoft.pilot.app.dto.UserDto;
+import com.estsoft.pilot.app.util.ApplicationContextUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -45,9 +46,10 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * @param email
-     * @return UserDetails를 구현한 User를 반환한다.
-     * @throws UsernameNotFoundException
+     * UserDetails를 구현한 User를 반환한다.
+     * @param email email
+     * @return UserDetails
+     * @throws UsernameNotFoundException UsernameNotFoundException
      */
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -57,7 +59,7 @@ public class UserService implements UserDetailsService {
         }
 
         Optional<UserEntity> optUserEntity = userRepository.findByEmail(email);
-        if (!optUserEntity.isPresent()) {
+        if (optUserEntity.isEmpty()) {
             throw new UsernameNotFoundException("User not found with this email : " + email);
         }
 
@@ -77,21 +79,20 @@ public class UserService implements UserDetailsService {
 
     /**
      * 회원가입 - 비밀번호 암호화
-     * @param userDto
-     * @return
+     * @param userDto userDto
      */
     @Transactional
-    public Long joinUser(UserDto userDto) {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    public void joinUser(UserDto userDto) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = (BCryptPasswordEncoder) ApplicationContextUtils.getBean("passwordEncoder");
         userDto.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
 
-        return userRepository.save(userDto.toEntity()).getId();
+        userRepository.save(userDto.toEntity());
     }
 
     /**
      * 이메일 중복 체크
-     * @param email
-     * @return
+     * @param email email
+     * @return email count
      */
     @Transactional
     public int checkInvalidEmail(String email) {

@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/common :: common"></th:block>
+    <title>상세보기</title>
+    <th:block th:insert="fragments/common :: common" />
 </head>
 <body class="ui grid">
     <div class="ui container eleven wide column main-container" style="padding: 50px 0">
@@ -11,7 +12,7 @@
         <div class="form-group">
             <label class="col-form-label" for="input-subject">제목</label>
             <input type="text" class="form-control" th:if="${boardDto.userEntity.email ne #authentication.principal.email}"
-                   th:value="${boardDto.subject}" readonly>
+                       th:value="${boardDto.subject}" readonly>
 
             <input type="text" class="form-control" id="input-subject" th:if="${boardDto.userEntity.email eq #authentication.principal.email}"
                    th:value="${boardDto.subject}" maxlength="100">
@@ -28,12 +29,12 @@
         </div>
 
         <div class="form-group" th:if="${boardDto.userEntity.email ne #authentication.principal.email}">
-            <label>내용</label>
+            <label for="view-content">내용</label>
             <textarea class="form-control" id="view-content" th:text="${boardDto.contents}"></textarea>
         </div>
         <div class="form-group" th:if="${boardDto.userEntity.email eq #authentication.principal.email}">
-            <label>내용</label>
-            <textarea class="form-control" id="txt-content" th:text="${boardDto.contents}" ></textarea>
+            <label for="txt-content">내용</label>
+            <textarea class="form-control" id="txt-content" th:text="${boardDto.contents}" placeholder="내용을 입력하세요." ></textarea>
         </div>
 
         <div align="right" style=" height: 50px; border-bottom:1px solid darkgray;">
@@ -52,7 +53,7 @@
             <input type="hidden" id="hidden-reply-id">
             <input type="hidden" id="hidden-thread">
             <input type="hidden" id="hidden-depth">
-            <textarea class="form-control" id="txt-reComment"></textarea>
+            <textarea class="form-control" id="txt-reComment" placeholder="내용을 입력하세요."></textarea>
         </div>
     </div>
     <div th:replace="fragments/footer :: footer"></div>

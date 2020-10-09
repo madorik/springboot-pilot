@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/common :: common"></th:block>
+    <title>글쓰기</title>
+    <th:block th:insert="fragments/common :: common" />
 </head>
 <body class="ui grid">
 <div class="ui container eleven wide column main-container" style="padding: 50px 0">
-    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="fragments/header :: header"> </div>
     <h1>답글달기</h1>
     <form id="form-post-reply">
         <input type="hidden" id="hidden-board-id" th:value="${boardDto.id}">
@@ -29,9 +30,9 @@
     <div align="right">
         <a th:href="${'/boards/' + boardDto.id}" role="button" class="ui button">원글보기</a>
         <a th:href="${'/boards'}" role="button" class="ui button">취소</a>
-        <button type="button" id="btn-reply" class="ui primary button"><i class="icon edit"></i>등록</button>
+        <button type="button" id="btn-reply" class="ui primary button"><i class="icon edit"> </i>등록</button>
     </div>
 </div>
-<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="fragments/footer :: footer"> </div>
 </body>
 </html>

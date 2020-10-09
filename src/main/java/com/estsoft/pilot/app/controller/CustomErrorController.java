@@ -20,8 +20,8 @@ public class CustomErrorController implements ErrorController {
     public String handleError(HttpServletRequest request, Model model) {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
         if (status != null) {
-            int statusCode = Integer.valueOf(status.toString());
-            HttpStatus httpStatus = HttpStatus.valueOf(Integer.valueOf(status.toString()));
+            int statusCode = Integer.parseInt(status.toString());
+            HttpStatus httpStatus = HttpStatus.valueOf(Integer.parseInt(status.toString()));
             model.addAttribute("status", status.toString());
             model.addAttribute("message", httpStatus.getReasonPhrase());
             model.addAttribute("timestamp", new Date());

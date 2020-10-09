@@ -33,8 +33,10 @@ public class BoardDto {
     }
 
     public BoardEntity toEntity() {
+
         UserDto userDto = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        BoardEntity boardEntity = BoardEntity.builder()
+
+        return BoardEntity.builder()
                 .id(id)
                 .thread(thread)
                 .depth(depth)
@@ -44,8 +46,6 @@ public class BoardDto {
                 .deleteYn(deleteYn)
                 .commentEntities(commentEntities)
                 .build();
-
-        return boardEntity;
     }
 
     @Builder

@@ -33,6 +33,9 @@ public class BoardAuthInterceptor implements HandlerInterceptor {
             UserDto user = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             Optional<BoardEntity> boardEntityWrapper = boardRepository.findById(id);
+            if (boardEntityWrapper.isEmpty()) {
+                return false;
+            }
             String userId = boardEntityWrapper.get().getUserEntity().getEmail();
             if (!userId.equals(user.getEmail())) {
                 response.getOutputStream().println("NOT AUTHORIZE!!");

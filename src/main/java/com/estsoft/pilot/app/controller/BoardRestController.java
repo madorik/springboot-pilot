@@ -21,9 +21,9 @@ public class BoardRestController {
 
     /**
      * 게시글 상세조회
-     * @param id
-     * @return
-     * @throws BoardNotFoundException
+     * @param id id
+     * @return ResponseEntity<BoardDto>
+     * @throws BoardNotFoundException BoardNotFoundException
      */
     @GetMapping("/{id}")
     public ResponseEntity<BoardDto> detail(@PathVariable("id") Long id) throws BoardNotFoundException {
@@ -34,8 +34,8 @@ public class BoardRestController {
 
     /**
      * 원글 등록
-     * @param boardDto
-     * @return
+     * @param boardDto boardDto
+     * @return ResponseEntity<Void>
      */
     @PostMapping
     public ResponseEntity<Void> save(@RequestBody BoardDto boardDto) {
@@ -45,8 +45,8 @@ public class BoardRestController {
 
     /**
      * 원글 수정
-     * @param boardDto
-     * @return
+     * @param boardDto boardDto
+     * @return ResponseEntity<Void>
      */
     @PatchMapping("/{id}")
     public ResponseEntity<Void> edit(@PathVariable("id") Long id, @RequestBody BoardDto boardDto) throws BoardNotFoundException {
@@ -56,8 +56,8 @@ public class BoardRestController {
 
     /**
      * 게시글 삭제
-     * @param id
-     * @return
+     * @param id id
+     * @return ResponseEntity<Void>
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) throws BoardNotFoundException {
@@ -67,8 +67,8 @@ public class BoardRestController {
 
     /**
      * 답글 등록
-     * @param boardDto
-     * @return
+     * @param boardDto boardDto
+     * @return ResponseEntity<Void>
      */
     @PostMapping("/{id}/reply")
     public ResponseEntity<Void> reply(@RequestBody BoardDto boardDto) {
@@ -80,18 +80,6 @@ public class BoardRestController {
     public static class BoardNotFoundException extends Exception {
         public BoardNotFoundException() {
             super();
-        }
-
-        public BoardNotFoundException(String message) {
-            super(message);
-        }
-
-        public BoardNotFoundException(String message, Throwable cause) {
-            super(message, cause);
-        }
-
-        public BoardNotFoundException(Throwable cause) {
-            super(cause);
         }
     }
 }

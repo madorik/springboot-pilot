@@ -31,7 +31,8 @@ public class CommentDto {
 
     public CommentEntity toEntity() {
         UserDto userDto = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        CommentEntity commentEntity = CommentEntity.builder()
+
+        return CommentEntity.builder()
                 .id(id)
                 .boardEntity(boardEntity)
                 .thread(thread)
@@ -40,8 +41,6 @@ public class CommentDto {
                 .contents(contents)
                 .deleteYn(deleteYn)
                 .build();
-
-        return commentEntity;
     }
 
     @Builder

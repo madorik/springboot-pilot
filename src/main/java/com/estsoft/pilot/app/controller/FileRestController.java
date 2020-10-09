@@ -24,8 +24,8 @@ public class FileRestController {
 
     /**
      * 이미지 업로드
-     * @param file
-     * @return
+     * @param file file
+     * @return ResponseEntity<String>
      */
     @PostMapping("/images")
     public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file) {
@@ -39,8 +39,8 @@ public class FileRestController {
 
     /**
      * 이미지 가져오기
-     * @param id
-     * @return
+     * @param id id
+     * @return ResponseEntity<?>
      */
     @GetMapping("/images/{id}")
     public ResponseEntity<?> getImage(@PathVariable Long id){

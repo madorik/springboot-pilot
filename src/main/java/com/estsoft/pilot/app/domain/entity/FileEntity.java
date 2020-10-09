@@ -33,6 +33,7 @@ public class FileEntity extends BaseTimeEntity {
     @Column
     private String contentType;
 
+    @Column
     private Long size;
 
     @Builder

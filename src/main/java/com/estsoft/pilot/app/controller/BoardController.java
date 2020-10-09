@@ -32,8 +32,7 @@ public class BoardController {
     }
 
     @GetMapping("/save")
-    public String save(Model model) {
-        model.addAttribute("requestFrom", "boardDto");
+    public String save() {
         return "board/board-save";
     }
 

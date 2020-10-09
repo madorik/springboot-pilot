@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="" xmlns:c="http://www.w3.org/1999/XSL/Transform">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:c="http://www.w3.org/1999/XSL/Transform"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/common :: common"></th:block>
+    <title>Pilot</title>
+    <th:block th:insert="fragments/common :: common" />
 </head>
 <body class="ui grid">
 <div class="ui container eleven wide column main-container" style="padding: 50px 0">
     <div th:replace="fragments/header :: header"></div>
-    <label th:text="'total count :' +  ${#numbers.formatInteger(boardList.totalElements, 0, 'COMMA')}"/>
+    <label th:text="'total count :' +  ${#numbers.formatInteger(boardList.totalElements, 0, 'COMMA')}"> </label>
     <table class="table table-horizontal table-bordered table-hover">
         <thead class="thead-strong thead-light">
         <tr>
@@ -23,18 +25,18 @@
             <td style="overflow:hidden; text-overflow: ellipsis; white-space:nowrap; max-width:300px;"  >
                 <c:if test="${board.depth > 0}">
                     <img th:width="${board.depth * 10}"/>
-                    <img th:src="@{img/arrow.png}" th:width="15" th:if="${board.depth gt 0}"/>
+                    <img th:src="@{img/arrow2.png}" th:width="15" th:if="${board.depth gt 0}" alt="arrow" />
                 </c:if>
-                <a th:text="${board.subject}"  th:href="${'/boards/' + board.id}"></a>
+                <a th:text="${board.subject}" th:href="${'/boards/' + board.id}"> </a>
             </td>
-            <td width="10%" align="center" th:text="${board.userEntity.userName}"></td>
-            <td width="15%" align="center" th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
-            <td width="15%" align="center" th:text="${#temporals.format(board.modifiedDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td width="10%" align="center" th:text="${board.userEntity.userName}"> </td>
+            <td width="15%" align="center" th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm:ss')}"> </td>
+            <td width="15%" align="center" th:text="${#temporals.format(board.modifiedDate, 'yyyy-MM-dd HH:mm:ss')}"> </td>
         </tr>
         </tbody>
     </table>
     <div>
-        <a th:href="@{/boards/save}" sec:authorize="isAuthenticated()" class="right floated ui primary button"><i class="icon edit"></i>글쓰기</a>
+        <a th:href="@{/boards/save}" sec:authorize="isAuthenticated()" class="right floated ui primary button"> <i class="icon edit"> </i>글쓰기</a>
     </div>
     <nav style="text-align: center;">
         <ul class="pagination" th:with="start=${T(Math).floor(boardList.number/10)*10 + 1}, last=(${start + 9 < boardList.totalPages ? start + 9 : boardList.totalPages})">
@@ -51,7 +53,7 @@
             </li>
 
             <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == boardList.number + 1} ? 'active'">
-                <a th:text="${page}" th:href="@{/boards(subject=${subject}, page=${page})}"></a>
+                <a th:text="${page}" th:href="@{/boards(subject=${subject}, page=${page})}"> </a>
             </li>
 
             <li th:class="${boardList.last} ? 'disabled'">

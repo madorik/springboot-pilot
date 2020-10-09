@@ -43,7 +43,7 @@ public class BoardService {
     @Transactional(readOnly = true)
     public BoardDto findOne(Long id) throws BoardNotFoundException {
         Optional<BoardEntity> boardEntityWrapper = boardRepository.findById(id);
-        if (!boardEntityWrapper.isPresent()) {
+        if (boardEntityWrapper.isEmpty()) {
             throw new BoardNotFoundException();
         }
         return this.convertEntityToDto(boardEntityWrapper.get());
@@ -51,7 +51,7 @@ public class BoardService {
 
     /**
      * page 단위로 게시글 가져오기
-     * @param pageNum
+     * @param pageNum pageNum
      * @return Page<BoardDto>
      */
     @Transactional(readOnly = true)
@@ -67,8 +67,8 @@ public class BoardService {
 
     /**
      * 원글 thread 및 자식 답글의 삭제여부를 Y로 업데이트
-     * @param id
-     * @throws BoardNotFoundException
+     * @param id id
+     * @throws BoardNotFoundException BoardNotFoundException
      */
     public void deleteById(Long id) throws BoardNotFoundException {
         BoardDto boardDto = this.findOne(id);
@@ -88,32 +88,29 @@ public class BoardService {
     /**
      * 1. 답글을 등록하면 부모글 thread와 이전글 thread 사이의 thread를 -1씩 업데이트한다.
      * 2. 등록되는 댓글의 thread는 client에서 부모 thread의 -1되어 전송되었으므로 그대로 save한다.
-     * @param boardDto
+     * @param boardDto boardDto
      */
     public void saveBoardReply(BoardDto boardDto) {
         Long thread = boardDto.getThread();
         Long prevThread = boardRepository.findByPrevThread(thread);
         boardRepository.updateBoardByThread(thread, prevThread);
-        boardRepository.save(boardDto.toEntity()).getId();
+        boardRepository.save(boardDto.toEntity());
     }
 
     /**
      * 1000단위의 max thread 값을 찾아 셋팅한뒤 저장
-     * @param boardDto
-     * @return
-     * @throws BoardNotFoundException
+     * @param boardDto boardDto
      */
-    public BoardEntity saveAndUpdateBoard(BoardDto boardDto) {
+    public void saveAndUpdateBoard(BoardDto boardDto) {
         boardDto.setThread(boardRepository.findMaxBoardThread());
         boardRepository.save(boardDto.toEntity());
-        return boardDto.toEntity();
     }
 
     /**
      * 제목, 내용 수정
-     * @param id
-     * @param boardDto
-     * @throws BoardNotFoundException
+     * @param id id
+     * @param boardDto boardDto
+     * @throws BoardNotFoundException BoardNotFoundException
      */
     public void edit(Long id, BoardDto boardDto) throws BoardNotFoundException {
         BoardDto copyBoardDto = this.findOne(id);
