@@ -21,6 +21,18 @@ const board = {
             height: 300,
             lang: "ko-KR",
             placeholder: '최대 2048자까지 쓸 수 있습니다.',
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontname', ['fontname']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen']],
+                ['help', ['help']]
+            ],
             callbacks: {
                 onImageUpload: function (files) {
                     for (let file of files) {
@@ -29,6 +41,8 @@ const board = {
                 }
             }
         });
+
+        $.summernote.options.toolbar.push(['view', ['fullscreen']]);
 
         $('#view-content').summernote('disable');
     },
