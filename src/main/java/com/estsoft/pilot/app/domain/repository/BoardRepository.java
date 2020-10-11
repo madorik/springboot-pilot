@@ -50,12 +50,11 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     /**
      * 게시글 페이징 조회
      * @param subject subject
+     * @param deleteYn deleteYn
      * @param pageable pageable
      * @return Page<BoardEntity>
      */
-    @Query(value = "SELECT b FROM BoardEntity b JOIN FETCH b.userEntity WHERE b.subject LIKE %:subject% AND b.deleteYn = 'N'"
-        , countQuery = "SELECT COUNT(b.id) FROM BoardEntity b WHERE b.subject LIKE %:subject% AND b.deleteYn = 'N'")
-    Page<BoardEntity> findBySubject(@Param("subject") String subject, @Param("pageable") Pageable pageable);
+    Page<BoardEntity> findBySubjectIgnoreCaseContainingAndDeleteYnIs(@Param("subject") String subject, @Param("deleteYn") String deleteYn, @Param("pageable") Pageable pageable);
 
     /**
      * 원글 삭제여부 업데이트

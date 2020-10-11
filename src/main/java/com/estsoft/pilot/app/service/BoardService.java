@@ -56,8 +56,8 @@ public class BoardService {
      */
     @Transactional(readOnly = true)
     public Page<BoardDto> findAllBySubject(Integer pageNum, String subject) {
-        Page<BoardEntity> page = boardRepository.findBySubject(subject, PageRequest.of(pageNum - 1, PAGE_POST_COUNT,
-                Sort.by("thread").descending().and(Sort.by("depth").descending())));
+        Page<BoardEntity> page = boardRepository.findBySubjectIgnoreCaseContainingAndDeleteYnIs(subject, "N", PageRequest.of(pageNum - 1, PAGE_POST_COUNT,
+                Sort.by("thread").descending()));
         return page.map(this::convertEntityToDto);
     }
 

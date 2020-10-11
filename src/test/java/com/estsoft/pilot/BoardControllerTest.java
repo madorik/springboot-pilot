@@ -54,11 +54,7 @@ public class BoardControllerTest {
     @Description("native query, order by를 서브쿼리안에 인덱싱 태움")
     public void findByNativeQuery() {
         long beforeTime = System.currentTimeMillis();
-        //93745
-        Page<BoardEntity> page = boardRepository.findBySubject("", PageRequest.of(145433, 20));
-        //List<BoardEntity> pages = boardRepository.findBySubjectForList("", PageRequest.of(93745, 20));
-        //Page<BoardEntity> page = boardRepository.findByNativeQuery("", PageRequest.of(1, 20));
-
+        Page<BoardEntity> page = boardRepository.findBySubjectIgnoreCaseContainingAndDeleteYnIs("123", "N", PageRequest.of(1, 20));
 
         long afterTime = System.currentTimeMillis();
         long secDiffTime = (afterTime - beforeTime)/1000;
