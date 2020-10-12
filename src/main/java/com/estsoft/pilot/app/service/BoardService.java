@@ -51,13 +51,14 @@ public class BoardService {
 
     /**
      * page 단위로 게시글 가져오기
+     *
      * @param pageNum pageNum
      * @return Page<BoardDto>
      */
     @Transactional(readOnly = true)
     public Page<BoardDto> findAllBySubject(Integer pageNum, String subject) {
-        Page<BoardEntity> page = boardRepository.findBySubjectIgnoreCaseContainingAndDeleteYnIs(subject, "N", PageRequest.of(pageNum - 1, PAGE_POST_COUNT,
-                Sort.by("thread").descending()));
+        Page<BoardEntity> page = boardRepository.findBySubjectIgnoreCaseContainingAndDeleteYnIs(subject, "N",
+                PageRequest.of(pageNum - 1, PAGE_POST_COUNT, Sort.by("thread").descending()));
         return page.map(this::convertEntityToDto);
     }
 
@@ -67,6 +68,7 @@ public class BoardService {
 
     /**
      * 원글 thread 및 자식 답글의 삭제여부를 Y로 업데이트
+     *
      * @param id id
      * @throws BoardNotFoundException BoardNotFoundException
      */
@@ -88,27 +90,30 @@ public class BoardService {
     /**
      * 1. 답글을 등록하면 부모글 thread와 이전글 thread 사이의 thread를 -1씩 업데이트한다.
      * 2. 등록되는 댓글의 thread는 client에서 부모 thread의 -1되어 전송되었으므로 그대로 save한다.
+     *
      * @param boardDto boardDto
      */
-    public void saveBoardReply(BoardDto boardDto) {
+    public Long saveBoardReply(BoardDto boardDto) {
         Long thread = boardDto.getThread();
         Long prevThread = boardRepository.findByPrevThread(thread);
         boardRepository.updateBoardByThread(thread, prevThread);
-        boardRepository.save(boardDto.toEntity());
+        return boardRepository.save(boardDto.toEntity()).getId();
     }
 
     /**
      * 1000단위의 max thread 값을 찾아 셋팅한뒤 저장
+     *
      * @param boardDto boardDto
      */
-    public void saveAndUpdateBoard(BoardDto boardDto) {
+    public Long saveAndUpdateBoard(BoardDto boardDto) {
         boardDto.setThread(boardRepository.findMaxBoardThread());
-        boardRepository.save(boardDto.toEntity());
+        return boardRepository.save(boardDto.toEntity()).getId();
     }
 
     /**
      * 제목, 내용 수정
-     * @param id id
+     *
+     * @param id       id
      * @param boardDto boardDto
      * @throws BoardNotFoundException BoardNotFoundException
      */

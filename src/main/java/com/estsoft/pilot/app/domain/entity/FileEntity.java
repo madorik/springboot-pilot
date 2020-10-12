@@ -36,13 +36,23 @@ public class FileEntity extends BaseTimeEntity {
     @Column
     private Long size;
 
+    @Column
+    private Long boardId;
+
+    @Column
+    private Long commentId;
+
+
     @Builder
-    public FileEntity(Long id, String fileName, String saveFileName, String filePath, String contentType, Long size) {
+    public FileEntity(Long id, String fileName, String saveFileName, String filePath,
+                      String contentType, Long size, Long boardId, Long commentId) {
         this.id = id;
         this.fileName = fileName;
         this.saveFileName = saveFileName;
         this.filePath = filePath;
         this.contentType = contentType;
         this.size = size;
+        this.boardId = boardId;
+        this.commentId = commentId;
     }
 }

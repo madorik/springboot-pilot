@@ -63,6 +63,10 @@ const comment = {
                     for (let file of files) {
                         board.sendFile(file, this, 50);
                     }
+                },
+                onMediaDelete: function (files) {
+                    const imageUrl = $(files[0]).attr('src');
+                    board.removeFile(imageUrl);
                 }
             },
             toolbar: [
@@ -150,6 +154,12 @@ const comment = {
             contents: $('#txt-comment').summernote('code')
         }
 
+        const isEmpty = $('#txt-comment').summernote('isEmpty');
+        if (isEmpty) {
+            alert("내용은 필수 입력 항목입니다.");
+            return;
+        }
+
         $.ajax({
             type: "POST",
             url: '/api/v1/boards/' + id + '/comments',
@@ -179,6 +189,12 @@ const comment = {
             contents: $('#txt-reComment').summernote('code'),
             thread: parseInt(thread) - 1,
             depth: parseInt(depth) + 1
+        }
+
+        const isEmpty = $('#txt-reComment').summernote('isEmpty');
+        if (isEmpty) {
+            alert("내용은 필수 입력 항목입니다.");
+            return;
         }
 
         $.ajax({

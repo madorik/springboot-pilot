@@ -35,9 +35,17 @@ const board = {
             ],
             callbacks: {
                 onImageUpload: function (files) {
+                    if (files.length > 3) {
+                        alert("업로드 파일은 한 번에 최대 3개까지만 선택 가능합니다.");
+                        return;
+                    }
                     for (let file of files) {
                         board.sendFile(file, this, 50);
                     }
+                },
+                onMediaDelete: function (files) {
+                    const imageUrl = $(files[0]).attr('src');
+                    board.removeFile(imageUrl);
                 }
             }
         });
@@ -46,21 +54,41 @@ const board = {
 
         $('#view-content').summernote('disable');
     },
+
+    removeFile(url) {
+        $.ajax({
+            type: 'DELETE',
+            url: url,
+            dataType: "text",
+            contentType: "application/json;",
+            headers: {'X-CSRF-TOKEN': board.token()}
+        }).done(() => {
+            console.log("remove image")
+        }).fail(err => {
+            console.log(JSON.stringify(err))
+        })
+    },
+
     sendFile(file, el, size) {
-        const form_data = new FormData();
-        form_data.append('file', file);
+        const data = new FormData();
+        data.append('file', file);
+        if (file.size > 1048576) {
+            alert("파일 사이즈는 1MB를 초과할 수 없습니다.");
+            return;
+        }
+
         $.ajax({
             type: "POST",
-            url: '/images',
+            url: '/api/v1/images',
             contentType: false,
-            data: form_data,
+            data: data,
             cache: false,
             enctype: 'multipart/form-data',
             processData: false,
             headers: {'X-CSRF-TOKEN': this.token()}
-        }).done((url) => {
-            $(el).summernote('insertImage', url, function ($image) {
-                $image.css('width', size+"%");
+        }).done((id) => {
+            $(el).summernote('insertImage', "/api/v1/images/" + id, function ($image) {
+                $image.css('width', size + "%");
             });
         }).fail(err => {
             console.log(err);
@@ -94,7 +122,7 @@ const board = {
             window.location.href = "/boards";
         }).fail(err => {
             console.log(JSON.stringify(err))
-        })
+        });
     },
 
     saveReply() {
@@ -126,7 +154,7 @@ const board = {
             window.location.href = "/boards";
         }).fail(err => {
             console.log(JSON.stringify(err))
-        })
+        });
     },
 
     update() {
@@ -135,6 +163,11 @@ const board = {
             id: id,
             subject: $("#input-subject").val(),
             contents: $('#txt-content').summernote('code'),
+        }
+        const isEmpty = $('#txt-content').summernote('isEmpty');
+        if (data.subject === '' || isEmpty) {
+            alert("제목과 내용은 필수 입력 항목입니다.");
+            return;
         }
 
         $.ajax({
@@ -149,7 +182,7 @@ const board = {
             window.location.href = "/boards";
         }).fail(err => {
             console.log(JSON.stringify(err))
-        })
+        });
     },
 
     delete() {

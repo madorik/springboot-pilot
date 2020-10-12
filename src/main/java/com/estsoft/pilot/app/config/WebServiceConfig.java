@@ -1,7 +1,6 @@
 package com.estsoft.pilot.app.config;
 
 import com.estsoft.pilot.app.config.auth.BoardAuthInterceptor;
-import com.estsoft.pilot.app.config.auth.CommentAuthInterceptor;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -16,8 +15,6 @@ public class WebServiceConfig implements WebMvcConfigurer {
 
     private final BoardAuthInterceptor boardAuthInterceptor;
 
-    private final CommentAuthInterceptor commentAuthInterceptor;
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(boardAuthInterceptor)
@@ -25,9 +22,6 @@ public class WebServiceConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/api/v1/boards/**/comments/**")
                 .addPathPatterns("/api/v1/boards/**");
 
-        registry.addInterceptor(commentAuthInterceptor)
-                .excludePathPatterns("/api/v1/boards/**/comments")
-                .addPathPatterns("/api/v1/boards/**/comments/**");
 
     }
 }

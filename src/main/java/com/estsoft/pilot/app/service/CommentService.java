@@ -53,7 +53,7 @@ public class CommentService {
      * 게시글의 코멘트 조회
      *
      * @param boardDto boardDto
-     * @param pageNum pageNum
+     * @param pageNum  pageNum
      * @return Page<CommentDto>
      */
     public Page<CommentDto> findByBoard(BoardDto boardDto, Integer pageNum) {
@@ -66,20 +66,19 @@ public class CommentService {
      * 상세 게시글에 코멘트 추가.
      *
      * @param commentDto commentDto
-     * @param boardId boardId
-     * @return CommentEntity
+     * @param boardId    boardId
+     * @return commentId
      */
-    public CommentEntity saveAndUpdateComment(CommentDto commentDto, Long boardId) {
+    public Long saveAndUpdateComment(CommentDto commentDto, Long boardId) {
         commentDto.setBoardEntity(new BoardDto(boardId).toEntity());
         commentDto.setThread(commentRepository.findMaxCommentThreadByBoardId(boardId));
-        commentRepository.save(commentDto.toEntity());
-        return commentDto.toEntity();
+        return commentRepository.save(commentDto.toEntity()).getId();
     }
 
     /**
      * 상세 게시글 코멘트에 댓글을 추가한다. (대댓글)
      *
-     * @param id id         : board_id
+     * @param id         board_id
      * @param commentDto commentDto
      */
     public void saveReplyByComment(Long id, CommentDto commentDto) {
