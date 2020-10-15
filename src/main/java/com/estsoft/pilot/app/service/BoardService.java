@@ -5,23 +5,28 @@ import com.estsoft.pilot.app.domain.entity.BoardEntity;
 import com.estsoft.pilot.app.domain.repository.BoardRepository;
 import com.estsoft.pilot.app.dto.BoardDto;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
  * Create by madorik on 2020-09-20
  */
+@Slf4j
 @AllArgsConstructor
 @Service
 @Transactional
 public class BoardService {
 
     private final BoardRepository boardRepository;
+
+    private final CacheService cacheService;
 
     private static final int PAGE_POST_COUNT = 20;
 
@@ -57,13 +62,14 @@ public class BoardService {
      */
     @Transactional(readOnly = true)
     public Page<BoardDto> findAllBySubject(Integer pageNum, String subject) {
-        Page<BoardEntity> page = boardRepository.findBySubjectIgnoreCaseContainingAndDeleteYnIs(subject, "N",
-                PageRequest.of(pageNum - 1, PAGE_POST_COUNT, Sort.by("thread").descending()));
-        return page.map(this::convertEntityToDto);
-    }
+        String deleteYn = "N";
+        Long offset = (pageNum - 1) * 20000L;
+        Long totalCount = cacheService.getBoardTotalCount(subject, deleteYn);
+        PageRequest of = PageRequest.of(pageNum - 1, PAGE_POST_COUNT);
+        List<BoardEntity> boardEntityList = boardRepository.findBySubjectContainingAndDeleteYnIs(subject, deleteYn, offset);
+        Page<BoardEntity> page = new PageImpl(boardEntityList, of, totalCount);
 
-    public Long save(BoardDto boardDto) {
-        return boardRepository.save(boardDto.toEntity()).getId();
+        return page.map(this::convertEntityToDto);
     }
 
     /**
@@ -85,6 +91,7 @@ public class BoardService {
             boardDto.setDeleteYn("Y");
             boardRepository.save(boardDto.toEntity());
         }
+        cacheService.removeBoardTotalCount();
     }
 
     /**
@@ -107,7 +114,9 @@ public class BoardService {
      */
     public Long saveAndUpdateBoard(BoardDto boardDto) {
         boardDto.setThread(boardRepository.findMaxBoardThread());
-        return boardRepository.save(boardDto.toEntity()).getId();
+        Long id = boardRepository.save(boardDto.toEntity()).getId();
+        cacheService.removeBoardTotalCount();
+        return id;
     }
 
     /**
