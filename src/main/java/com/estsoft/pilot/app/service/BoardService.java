@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.query.EscapeCharacter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,9 +65,9 @@ public class BoardService {
     public Page<BoardDto> findAllBySubject(Integer pageNum, String subject) {
         String deleteYn = "N";
         Long offset = (pageNum - 1) * 20000L;
-        Long totalCount = cacheService.getBoardTotalCount(subject, deleteYn);
+        Long totalCount = cacheService.getBoardTotalCount(EscapeCharacter.DEFAULT.escape(subject), deleteYn);
         PageRequest of = PageRequest.of(pageNum - 1, PAGE_POST_COUNT);
-        List<BoardEntity> boardEntityList = boardRepository.findBySubjectContainingAndDeleteYnIs(subject, deleteYn, offset);
+        List<BoardEntity> boardEntityList = boardRepository.findBySubjectContainingAndDeleteYnIs(EscapeCharacter.DEFAULT.escape(subject), deleteYn, offset);
         Page<BoardEntity> page = new PageImpl(boardEntityList, of, totalCount);
 
         return page.map(this::convertEntityToDto);
