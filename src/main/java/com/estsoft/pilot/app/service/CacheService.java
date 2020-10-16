@@ -20,8 +20,8 @@ public class CacheService {
     private final BoardRepository boardRepository;
 
     @Cacheable(value = "totalCountCache", key = "#subject")
-    public Long getBoardTotalCount(String subject, String deleteYn) {
-        return boardRepository.findBySubjectContainingAndDeleteYnIsTotalCount(subject, deleteYn);
+    public Long getBoardTotalCount(String subject) {
+        return boardRepository.findBySubjectTotalCount(subject);
     }
 
     @CacheEvict(value = "totalCountCache", allEntries = true)

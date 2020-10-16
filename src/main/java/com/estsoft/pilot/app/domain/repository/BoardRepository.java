@@ -77,14 +77,13 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
      * @param subject subject
      * @return total count
      */
-    @Query(nativeQuery = true, value = "SELECT COUNT(*) FROM board b WHERE subject LIKE :subject%  AND delete_yn = :deleteYn ")
-    Long findBySubjectContainingAndDeleteYnIsTotalCount(@Param("subject") String subject, @Param("deleteYn") String deleteYn);
+    @Query(nativeQuery = true, value = "SELECT COUNT(*) FROM board b WHERE subject LIKE :subject% ")
+    Long findBySubjectTotalCount(@Param("subject") String subject);
 
     /**
      * 게시글 페이징 처리
      *
      * @param subject  subject
-     * @param deleteYn deleteYn
      * @param offset   offset
      * @return List<BoardEntity>
      */
@@ -95,12 +94,11 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
                     + "       SELECT board_id "
                     + "       FROM board "
                     + "       WHERE subject LIKE :subject% "
-                    + "       AND delete_yn = :deleteYn "
                     + "       AND thread <= (SELECT max(thread) - :offset FROM board) "
                     + "       ORDER BY thread DESC "
                     + "       LIMIT 20 "
                     + ") AS t "
                     + "ON t.board_id = b.board_id")
-    List<BoardEntity> findBySubjectContainingAndDeleteYnIs(@Param("subject") String subject, @Param("deleteYn") String deleteYn, @Param("offset") Long offset);
+    List<BoardEntity> findBySubject(@Param("subject") String subject, @Param("offset") Long offset);
 
 }

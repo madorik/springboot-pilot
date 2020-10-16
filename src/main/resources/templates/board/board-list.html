@@ -27,11 +27,12 @@
                     <img th:width="${board.depth * 10}"/>
                     <img th:src="@{img/arrow2.png}" th:width="15" th:if="${board.depth gt 0}" alt="arrow" />
                 </c:if>
-                <a th:text="${board.subject}" th:href="${'/boards/' + board.id}"> </a>
+                <span th:if="${board.deleteYn == 'Y'}">삭제된 게시글입니다.</span>
+                <a    th:if="${board.deleteYn == 'N'}" th:text="${board.subject}" th:href="${'/boards/' + board.id}">게시글</a>
             </td>
-            <td width="10%" align="center" th:text="${board.userEntity.userName}"> </td>
-            <td width="15%" align="center" th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm:ss')}"> </td>
-            <td width="15%" align="center" th:text="${#temporals.format(board.modifiedDate, 'yyyy-MM-dd HH:mm:ss')}"> </td>
+            <td width="10%" align="center" th:text="${board.userEntity.userName}">작성자</td>
+            <td width="15%" align="center" th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm:ss')}">작성일</td>
+            <td width="15%" align="center" th:text="${#temporals.format(board.modifiedDate, 'yyyy-MM-dd HH:mm:ss')}">수정일</td>
         </tr>
         </tbody>
     </table>

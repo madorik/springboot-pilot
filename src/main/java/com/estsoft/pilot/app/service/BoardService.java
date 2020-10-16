@@ -63,11 +63,10 @@ public class BoardService {
      */
     @Transactional(readOnly = true)
     public Page<BoardDto> findAllBySubject(Integer pageNum, String subject) {
-        String deleteYn = "N";
         Long offset = (pageNum - 1) * 20000L;
-        Long totalCount = cacheService.getBoardTotalCount(EscapeCharacter.DEFAULT.escape(subject), deleteYn);
+        Long totalCount = cacheService.getBoardTotalCount(EscapeCharacter.DEFAULT.escape(subject));
         PageRequest of = PageRequest.of(pageNum - 1, PAGE_POST_COUNT);
-        List<BoardEntity> boardEntityList = boardRepository.findBySubjectContainingAndDeleteYnIs(EscapeCharacter.DEFAULT.escape(subject), deleteYn, offset);
+        List<BoardEntity> boardEntityList = boardRepository.findBySubject(EscapeCharacter.DEFAULT.escape(subject), offset);
         Page<BoardEntity> page = new PageImpl(boardEntityList, of, totalCount);
 
         return page.map(this::convertEntityToDto);
