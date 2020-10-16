@@ -44,6 +44,7 @@ public class CommentEntity extends BaseTimeEntity {
     @Column(length = 200, nullable = false)
     private String contents;
 
+    @Column(columnDefinition = "varchar(1) default 'N'")
     private String deleteYn;
 
     @Builder
