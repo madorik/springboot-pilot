@@ -43,6 +43,7 @@ const user = {
             console.log(err)
         })
     },
+
     checkInvalidPassword() {
         const regExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,15}$/;
         const password = $('#password').val();
@@ -59,7 +60,11 @@ const user = {
         } else {
             $("#confirm-password").css("border-color", INVALID_COLOR);
         }
-    }
+    },
+
+    token() {
+        return $("input[name='_csrf']").val();
+    },
 }
 
 user.init()

@@ -61,7 +61,7 @@ const board = {
             url: url,
             dataType: "text",
             contentType: "application/json;",
-            headers: {'X-CSRF-TOKEN': board.token()}
+            headers: {'X-CSRF-TOKEN': user.token()}
         }).done(() => {
             console.log("remove image")
         }).fail(err => {
@@ -85,7 +85,7 @@ const board = {
             cache: false,
             enctype: 'multipart/form-data',
             processData: false,
-            headers: {'X-CSRF-TOKEN': this.token()}
+            headers: {'X-CSRF-TOKEN': user.token()}
         }).done((id) => {
             $(el).summernote('insertImage', "/api/v1/images/" + id, function ($image) {
                 $image.css('width', size + "%");
@@ -93,10 +93,6 @@ const board = {
         }).fail(err => {
             console.log(err);
         });
-    },
-
-    token() {
-        return $("input[name='_csrf']").val();
     },
 
     savePost() {
@@ -116,7 +112,7 @@ const board = {
             dataType: "text",
             contentType: "application/json;",
             data: JSON.stringify(data),
-            headers: {'X-CSRF-TOKEN': board.token()}
+            headers: {'X-CSRF-TOKEN': user.token()}
         }).done(() => {
             alert("게시글이 등록되었습니다.")
             window.location.href = "/boards";
@@ -148,7 +144,7 @@ const board = {
             dataType: "text",
             contentType: "application/json;",
             data: JSON.stringify(data),
-            headers: {'X-CSRF-TOKEN': board.token()}
+            headers: {'X-CSRF-TOKEN': user.token()}
         }).done(() => {
             alert("답글이 등록되었습니다.")
             window.location.href = "/boards";
@@ -158,13 +154,14 @@ const board = {
     },
 
     update() {
-        const id = $("#input-id").val()
+        const id = $("#input-id").val();
+        const contentObj = $('#txt-content');
         const data = {
             id: id,
             subject: $("#input-subject").val(),
-            contents: $('#txt-content').summernote('code'),
+            contents: contentObj.summernote('code'),
         }
-        const isEmpty = $('#txt-content').summernote('isEmpty');
+        const isEmpty = contentObj.summernote('isEmpty');
         if (data.subject === '' || isEmpty) {
             alert("제목과 내용은 필수 입력 항목입니다.");
             return;
@@ -176,7 +173,7 @@ const board = {
             data: JSON.stringify(data),
             dataType: "text",
             contentType: "application/json;",
-            headers: {'X-CSRF-TOKEN': this.token()}
+            headers: {'X-CSRF-TOKEN': user.token()}
         }).done(() => {
             alert("게시글이 수정되었습니다.")
             window.location.href = "/boards";
@@ -196,7 +193,7 @@ const board = {
             url: "/api/v1/boards/" + id,
             dataType: "text",
             contentType: "application/json;",
-            headers: {'X-CSRF-TOKEN': this.token()}
+            headers: {'X-CSRF-TOKEN': user.token()}
         }).done(() => {
             alert("게시글이 삭제되었습니다.")
             window.location.href = "/boards";

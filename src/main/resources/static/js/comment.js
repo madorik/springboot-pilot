@@ -1,6 +1,6 @@
 const comment = {
     init() {
-        const self = this
+        const self = this;
         let page = 1;
         $("#btn-comment").on("click", () => {
             self.saveComment();
@@ -148,13 +148,14 @@ const comment = {
 
     saveComment() {
         const id = $("#input-id").val();
+        const contentObj = $('#txt-comment');
         const data = {
             boardId: id,
             userId: $("#hidden-email").val(),
-            contents: $('#txt-comment').summernote('code')
+            contents: contentObj.summernote('code')
         }
 
-        const isEmpty = $('#txt-comment').summernote('isEmpty');
+        const isEmpty = contentObj.summernote('isEmpty');
         if (isEmpty) {
             alert("내용은 필수 입력 항목입니다.");
             return;
@@ -166,10 +167,10 @@ const comment = {
             dataType: "text",
             contentType: "application/json;",
             data: JSON.stringify(data),
-            headers: {'X-CSRF-TOKEN': board.token()}
+            headers: {'X-CSRF-TOKEN': user.token()}
         }).done(() => {
             alert("댓글이 등록되었습니다.");
-            $('#txt-comment').summernote('reset');
+            contentObj.summernote('reset');
             location.reload();
         }).fail(err => {
             console.log(JSON.stringify(err))
@@ -183,15 +184,16 @@ const comment = {
         const commentId = $("#hidden-comment-id").val();
         const commentApi = '/api/v1/boards/' + id + '/comments/reply';
         const method = thread ? 'POST' : 'PUT'
-        const url = thread ? commentApi : commentApi + '/' + commentId
+        const url = thread ? commentApi : commentApi + '/' + commentId;
+        const contentObj = $('#txt-reComment');
         const data = {
             userId: $("#hidden-email").val(),
-            contents: $('#txt-reComment').summernote('code'),
+            contents: contentObj.summernote('code'),
             thread: parseInt(thread) - 1,
             depth: parseInt(depth) + 1
         }
 
-        const isEmpty = $('#txt-reComment').summernote('isEmpty');
+        const isEmpty = contentObj.summernote('isEmpty');
         if (isEmpty) {
             alert("내용은 필수 입력 항목입니다.");
             return;
@@ -203,10 +205,10 @@ const comment = {
             dataType: "text",
             contentType: "application/json;",
             data: JSON.stringify(data),
-            headers: {'X-CSRF-TOKEN': board.token()}
+            headers: {'X-CSRF-TOKEN': user.token()}
         }).done(() => {
             alert("댓글이 등록되었습니다.")
-            $('#txt-reComment').summernote('reset');
+            contentObj.summernote('reset');
             location.reload();
         }).fail(err => {
             console.log(JSON.stringify(err))
@@ -234,7 +236,7 @@ const comment = {
             url: '/api/v1/boards/' + boardId + '/comments/' + commentId,
             dataType: "text",
             contentType: "application/json;",
-            headers: {'X-CSRF-TOKEN': board.token()}
+            headers: {'X-CSRF-TOKEN': user.token()}
         }).done(() => {
             alert("댓글이 삭제되었습니다.");
             location.reload();
