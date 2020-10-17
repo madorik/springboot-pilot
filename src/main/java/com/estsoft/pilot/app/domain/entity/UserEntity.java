@@ -35,4 +35,13 @@ public class UserEntity extends BaseTimeEntity {
         this.userName = userName;
         this.password = password;
     }
+
+    @Getter
+    @AllArgsConstructor
+    public enum Role {
+
+        ADMIN("ROLE_ADMIN"), USER("ROLE_USER");
+
+        private final String value;
+    }
 }
