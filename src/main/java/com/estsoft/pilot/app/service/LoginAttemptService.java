@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class LoginAttemptService {
 
+    private final static Integer MAX_ATTEMPT_COUNT = 5;
+
     private final CacheService cacheService;
 
     public void loginSucceeded(String remoteAddress) {
@@ -22,23 +24,11 @@ public class LoginAttemptService {
     }
 
     public void loginFailed(String remoteAddress) {
-        int count = 0;
-        try {
-            count = cacheService.getAttemptCount(remoteAddress);
-        } catch (Exception e) {
-            log.error("login attempt count exception : " + e);
-        }
-        count++;
+        int count = cacheService.getAttemptCount(remoteAddress) + 1;
         cacheService.putAttemptCount(remoteAddress, count);
     }
 
     public boolean isBlocked(String remoteAddress) {
-        try {
-            int maxAttemptCount = 5;
-            return cacheService.getAttemptCount(remoteAddress) >= maxAttemptCount;
-        } catch (Exception e) {
-            log.error("login attempt count exception : " + e);
-            return false;
-        }
+        return cacheService.getAttemptCount(remoteAddress) >= MAX_ATTEMPT_COUNT;
     }
 }
