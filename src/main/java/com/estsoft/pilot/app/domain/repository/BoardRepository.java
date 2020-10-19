@@ -28,17 +28,19 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
      * @return id
      */
     @Query(nativeQuery = true,
-            value = "SELECT COALESCE(MAX(b.thread), 0) "
-                    + "FROM board AS b "
-                    + "JOIN ("
-                    + "       SELECT board_id "
-                    + "       FROM board "
-                    + "       WHERE depth = 0 "
-                    + "       AND thread < :thread "
-                    + "       ORDER BY thread DESC "
-                    + "       LIMIT 1 "
-                    + ") AS t "
-                    + "ON t.board_id = b.board_id")
+            value = """
+            SELECT COALESCE(MAX(b.thread), 0) 
+            FROM board AS b 
+            JOIN (
+                    SELECT board_id 
+                    FROM board 
+                    WHERE depth = 0 
+                    AND thread < :thread 
+                    ORDER BY thread DESC 
+                    LIMIT 1 
+            ) AS t 
+            ON t.board_id = b.board_id
+            """)
     Long findByPrevThread(@Param("thread") Long thread);
 
     /**
@@ -88,17 +90,19 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
      * @return List<BoardEntity>
      */
     @Query(nativeQuery = true,
-            value = "SELECT b.board_id, b.user_id, b.subject, b.contents, b.delete_yn, b.depth, b.thread, b.created_date, b.modified_date "
-                    + "FROM board AS b "
-                    + "JOIN ("
-                    + "       SELECT board_id "
-                    + "       FROM board "
-                    + "       WHERE subject LIKE :subject% "
-                    + "       AND thread <= (SELECT max(thread) - :offset FROM board) "
-                    + "       ORDER BY thread DESC "
-                    + "       LIMIT 20 "
-                    + ") AS t "
-                    + "ON t.board_id = b.board_id")
+            value = """
+            SELECT b.board_id, b.user_id, b.subject, b.contents, b.delete_yn, b.depth, b.thread, b.created_date, b.modified_date
+            FROM board AS b
+            JOIN (
+                    SELECT board_id
+                    FROM board
+                    WHERE subject LIKE :subject%
+                    AND thread <= (SELECT max(thread) - :offset FROM board)
+                    ORDER BY thread DESC
+                    LIMIT 20
+            ) AS t
+            ON t.board_id = b.board_id
+            """)
     List<BoardEntity> findBySubject(@Param("subject") String subject, @Param("offset") Long offset);
 
 }
